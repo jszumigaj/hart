@@ -18,22 +18,22 @@ const (
 	InH2O               UnitCode = 1
 	InHg                UnitCode = 2
 	FtH2O               UnitCode = 3
-	mmH2O               UnitCode = 4
-	mmHg                UnitCode = 5
-	psi                 UnitCode = 6
-	bar                 UnitCode = 7
-	mbar                UnitCode = 8
-	g_SqCm              UnitCode = 9
-	kg_SqCm             UnitCode = 10
+	MmH2O               UnitCode = 4
+	MmHg                UnitCode = 5
+	Psi                 UnitCode = 6
+	Bar                 UnitCode = 7
+	Mbar                UnitCode = 8
+	G_SqCm              UnitCode = 9
+	Kg_SqCm             UnitCode = 10
 	Pa                  UnitCode = 11
-	kPa                 UnitCode = 12
-	torr                UnitCode = 13
-	atm                 UnitCode = 14
-	in_H2O_60_degrees_F UnitCode = 145
-	m_H2O_4_degrees_C   UnitCode = 171
+	KPa                 UnitCode = 12
+	Torr                UnitCode = 13
+	Atm                 UnitCode = 14
+	In_H2O_60_degrees_F UnitCode = 145
+	M_H2O_4_degrees_C   UnitCode = 171
 	MPa                 UnitCode = 237
-	in_H2O_4_degrees_C  UnitCode = 238
-	mm_H2O_4_degrees_C  UnitCode = 239
+	In_H2O_4_degrees_C  UnitCode = 238
+	Mm_H2O_4_degrees_C  UnitCode = 239
 )
 
 // desciptions for Stringer
@@ -46,22 +46,22 @@ var unitDescriptions = map[UnitCode]string{
 	InH2O:               "in H₂O",
 	InHg:                "in Hg",
 	FtH2O:               "Ft H₂O",
-	mmH2O:               "mm H₂O",
-	mmHg:                "mm Hg",
-	psi:                 "psi",
-	bar:                 "bar",
-	mbar:                "mbar",
-	g_SqCm:              "G/cm²",
-	kg_SqCm:             "kG/cm²",
+	MmH2O:               "mm H₂O",
+	MmHg:                "mm Hg",
+	Psi:                 "psi",
+	Bar:                 "bar",
+	Mbar:                "mbar",
+	G_SqCm:              "G/cm²",
+	Kg_SqCm:             "kG/cm²",
 	Pa:                  "Pa",
-	kPa:                 "kPa",
-	torr:                "torr",
-	atm:                 "atm",
-	in_H2O_60_degrees_F: "in H₂0 (60°F)",
-	m_H2O_4_degrees_C:   "m H₂O (4°C)",
+	KPa:                 "kPa",
+	Torr:                "torr",
+	Atm:                 "atm",
+	In_H2O_60_degrees_F: "in H₂0 (60°F)",
+	M_H2O_4_degrees_C:   "m H₂O (4°C)",
 	MPa:                 "MPa",
-	in_H2O_4_degrees_C:  "in H₂O (4°C)",
-	mm_H2O_4_degrees_C:  "mm H₂O (4°C)",
+	In_H2O_4_degrees_C:  "in H₂O (4°C)",
+	Mm_H2O_4_degrees_C:  "mm H₂O (4°C)",
 }
 
 // Stringer

@@ -42,12 +42,7 @@ func (c *command1) SetData(data []byte, status hart.CommandStatus) bool {
 	return false
 }
 
+// PV returns Primary variable value readed in Command1
 func (d *UniversalDevice) PV() (float32, UnitCode) {
 	return d.Pv, d.PvUnit
 }
-
-// type Cmd1Data struct {
-// 	PV      float32 `json:"some_field"`
-// 	PvUnit  UnitCode
-// 	Example int
-// }

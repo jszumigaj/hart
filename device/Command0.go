@@ -16,7 +16,7 @@ type command0 struct {
 	MfrsId                    byte   `json:"manufacturer_id"`
 	DevType                   byte   `json:"device_type"`
 	PollAddr                  byte   `json:"polling_address"`
-	Preambles_                byte   `json:"preambles"`
+	Prmbles                   byte   `json:"preambles"`
 	HartProtocolMajorRevision byte   `json:"hart_protocol_major_revision"`
 	RevisionLevel             byte   `json:"revision_level"`
 	SoftwareRevisionLevel     byte   `json:"software_revision_level"`
@@ -50,7 +50,7 @@ func (c *command0) SetData(data []byte, status hart.CommandStatus) bool {
 
 	c.device.MfrsId = data[1]
 	c.device.DevType = data[2]
-	c.device.Preambles_ = data[3]
+	c.device.Prmbles = data[3]
 	c.device.HartProtocolMajorRevision = data[4]
 	c.device.RevisionLevel = data[5]
 	c.device.SoftwareRevisionLevel = data[6]

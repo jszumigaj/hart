@@ -19,11 +19,6 @@ type UniversalDevice struct {
 	command3
 }
 
-// func (d UniversalDevice) MarshalJSON() ([]byte, error) {
-// 	print("marshall....")
-// 	return json.Marshal(d.cmd1Data)
-// }
-
 func (d *UniversalDevice) String() string {
 	return fmt.Sprintf("Id: %05d Mfr: 0x%02x Type: 0x%02x", d.DevId, d.MfrsId, d.DevType)
 }
@@ -42,10 +37,10 @@ func (d *UniversalDevice) PollAddress() byte { return d.PollAddr }
 
 // Preambles is DeviceIdentifier method implementation
 func (d *UniversalDevice) Preambles() byte {
-	if d.Preambles_ < 5 {
-		d.Preambles_ = 5
+	if d.Prmbles < 5 {
+		d.Prmbles = 5
 	}
-	return d.Preambles_
+	return d.Prmbles
 }
 
 // Status is DeviceIdentifier method implementation
@@ -54,18 +49,19 @@ func (d *UniversalDevice) Status() hart.FieldDeviceStatus { return d.status }
 // SetStatus is DeviceIdentifier method implementation
 func (d *UniversalDevice) SetStatus(status hart.FieldDeviceStatus) { d.status = status }
 
-// Command0 creates HART Command #0
+// Command0 creates command for reading HART Command #0
 func (d *UniversalDevice) Command0() hart.Command { return &command0{device: d} }
 
-// Command1 creates HART Command #1
+// Command1 creates command for reading HART Command #1
 func (d *UniversalDevice) Command1() hart.Command { return &command1{device: d} }
 
-// Command2 creates HART Command #2
+// Command2 creates command for reading HART Command #2
 func (d *UniversalDevice) Command2() hart.Command { return &command2{device: d} }
 
-// Command3 creates HART Command #3
+// Command3 creates command for reading HART Command #3
 func (d *UniversalDevice) Command3() hart.Command { return &command3{device: d} }
 
+// UnitCode is an alias to hart.UnitCode
 type UnitCode = hart.UnitCode
 
 func getFloat(buf []byte) (float32, bool) {

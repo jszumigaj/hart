@@ -47,6 +47,8 @@ func (c *command2) SetData(data []byte, status hart.CommandStatus) bool {
 	return ok
 }
 
+// Current returns analog output current readed by Command2
 func (d *UniversalDevice) Current() float32 { return d.Curr }
 
+// PercentOfRange returs percent of range output
 func (d *UniversalDevice) PercentOfRange() float32 { return d.PoR }

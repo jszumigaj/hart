@@ -68,14 +68,17 @@ func (c *command3) SetData(data []byte, status hart.CommandStatus) bool {
 	return true
 }
 
+// SV returns Secondary variable 
 func (d *UniversalDevice) SV() (float32, UnitCode) {
 	return d.Sv, d.SvUnit
 }
 
+// TV returns Third variable 
 func (d *UniversalDevice) TV() (float32, UnitCode) {
 	return d.Tv, d.TvUnit
 }
 
+// FV returns Fourth variable 
 func (d *UniversalDevice) FV() (float32, UnitCode) {
 	return d.Fv, d.FvUnit
 }
