@@ -5,7 +5,7 @@ import "fmt"
 // UnitCode contains HART unit codes enumeration
 type UnitCode byte
 
-// temperature
+// Temperature units
 const (
 	Celsius    UnitCode = 32
 	Fahrenheit UnitCode = 33
@@ -13,7 +13,7 @@ const (
 	Kelvin     UnitCode = 35
 )
 
-// Pressure
+// Pressure units
 const (
 	InH2O               UnitCode = 1
 	InHg                UnitCode = 2
@@ -38,11 +38,10 @@ const (
 
 // desciptions for Stringer
 var unitDescriptions = map[UnitCode]string{
-	Celsius:    "°C",
-	Fahrenheit: "°F",
-	Rankine:    "°R",
-	Kelvin:     "K",
-
+	Celsius:             "°C",
+	Fahrenheit:          "°F",
+	Rankine:             "°R",
+	Kelvin:              "K",
 	InH2O:               "in H₂O",
 	InHg:                "in Hg",
 	FtH2O:               "Ft H₂O",

@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 )
 
-// DefaultFrameFactory creates short frame for Command #0 and LongFrame for others
+// DefaultFrameFactory creates MasterToSlaveShortFrame for Command #0 and MasterToSlaveLongFrame for others
 func DefaultFrameFactory(device DeviceIdentifier, command Command) Frame {
 	if command.No() == 0 {
 		return ShortFrameFactory(device, command)
@@ -19,7 +19,7 @@ func ShortFrameFactory(device DeviceIdentifier, command Command) Frame {
 	addr := []byte{device.PollAddress()}
 	cmd := command.No()
 	data := command.Data()
-	return NewFrame(pre, MasterToSlaveShortFrame, addr, cmd, NoResponseStatus, data)
+	return NewFrame(pre, MasterToSlaveShortFrame, addr, cmd, EmptyResponseStatus, data)
 }
 
 // LongFrameFactory creates Master to slave long frame
@@ -28,7 +28,7 @@ func LongFrameFactory(device DeviceIdentifier, command Command) Frame {
 	addr := getLongAddr(device)
 	cmd := command.No()
 	data := command.Data()
-	return NewFrame(pre, MasterToSlaveLongFrame, addr, cmd, NoResponseStatus, data)
+	return NewFrame(pre, MasterToSlaveLongFrame, addr, cmd, EmptyResponseStatus, data)
 }
 
 // builds 5-bytes length address from device identity

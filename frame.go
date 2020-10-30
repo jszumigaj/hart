@@ -25,8 +25,8 @@ var FrameZero = Frame{
 	address:   []byte{0},
 }
 
-// NoResponseStatus provides empty response status
-var NoResponseStatus = []byte{}
+// EmptyResponseStatus provides empty response status
+var EmptyResponseStatus = []byte{}
 
 // NoData provides empty buffer as data
 var NoData = []byte{}

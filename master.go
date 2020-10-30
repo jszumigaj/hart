@@ -32,32 +32,32 @@ type DeviceIdentifier interface {
 // Client can use one of predefined hart.ShortFrameFactory or hart.LongFrameFactory
 type FrameFactory func(DeviceIdentifier, Command) Frame
 
-// CommandExecutor executes command. Set PrimaryMaster property to true to send frame as Primary master
-type CommandExecutor struct {
+// Master executes command. Set Primary property to true to send frame as Primary master
+type Master struct {
 	modem         FrameSender
 	FrameFactory  FrameFactory
-	PrimaryMaster bool
+	Primary bool
 }
 
-// NewCommandExecutor creates CommandExecutor object
-func NewCommandExecutor(modem FrameSender) CommandExecutor {
-	return CommandExecutor{
+// NewMaster creates Master object
+func NewMaster(modem FrameSender) *Master {
+	return &Master{
 		modem:        modem,
 		FrameFactory: DefaultFrameFactory,
 	}
 }
 
 // Execute method executes HART command
-func (e *CommandExecutor) Execute(command Command) (CommandStatus, error) {
+func (m *Master) Execute(command Command) (CommandStatus, error) {
 	device := command.Device()
-	txFrame := e.FrameFactory(device, command)
-	if e.PrimaryMaster {
+	txFrame := m.FrameFactory(device, command)
+	if m.Primary {
 		txFrame.AsPrimaryMaster()
 	}
 	rxBuffer := make([]byte, 128)
 	var result CommandStatus = nil
 
-	count, err := e.modem.SendFrame(txFrame.Buffer(), rxBuffer)
+	count, err := m.modem.SendFrame(txFrame.Buffer(), rxBuffer)
 	if err != nil {
 		return nil, err
 	}
@@ -92,12 +92,12 @@ func (e *CommandExecutor) Execute(command Command) (CommandStatus, error) {
 }
 
 // ExecuteAsync executes more commands asynchronously - proof of concept:
-func (e *CommandExecutor) ExecuteAsync(ch chan<- Command, commands ...Command) error {
+func (m *Master) ExecuteAsync(ch chan<- Command, commands ...Command) error {
 
 	//panic("Not implemented!")
 
 	for _, cmd := range commands {
-		if _, err := e.Execute(cmd); err != nil {
+		if _, err := m.Execute(cmd); err != nil {
 			return err
 		}
 		ch <- cmd

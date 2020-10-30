@@ -1,4 +1,4 @@
-// This file contains error types use by CommandExecutor func
+// This file contains error types used by Master.Execute func
 
 package hart
 
