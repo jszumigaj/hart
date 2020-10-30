@@ -17,11 +17,12 @@ type SerialPort struct {
 // Open port to HART communication
 func Open(portName string) (*SerialPort, error) {
 	conf := &serial.Config{
-		Name:        portName,
-		Baud:        1200,
-		Parity:      serial.ParityOdd,
-		StopBits:    serial.Stop1,
-		ReadTimeout: 100 * time.Millisecond,
+		Name:           portName,
+		Baud:           1200,
+		Parity:         serial.ParityOdd,
+		StopBits:       serial.Stop1,
+		ReadTimeout:    100 * time.Millisecond,
+		RTSFlowControl: true,
 	}
 
 	s, err := serial.OpenPort(conf)
