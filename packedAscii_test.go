@@ -10,10 +10,10 @@ import (
 func TestAsciiToPackedAscii(t *testing.T) {
 	//arrange
 	msg := "test"
-	expected := []byte{80, 84, 212, 130, 8, 32, 130, 0}
+	expected := []byte{80, 84, 212, 130, 8, 32}
 
 	//act
-	packedA := NewPackedAscii(msg, 8)
+	packedA := NewPackedAscii(msg, 6)
 	result := []byte(packedA)
 	
 	//assert
@@ -24,7 +24,7 @@ func TestAsciiToPackedAscii(t *testing.T) {
 
 func TestPackedAsciiToAscii(t *testing.T) {
 
-	packed := PackedASCII([]byte{80, 84, 212, 130, 8, 32, 130, 0})
+	packed := PackedASCII([]byte{80, 84, 212, 130, 8, 32})
 	expected := "TEST"
 
 	result := packed.String()

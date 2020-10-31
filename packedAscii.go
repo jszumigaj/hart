@@ -1,88 +1,97 @@
 package hart
 
-import "strings"
+import (
+	"bytes"
+	"encoding/binary"
+	"errors"
+	"io"
+	"strings"
+)
 
 type PackedASCII []byte
 
-type ASCII []byte
-
-func NewPackedAscii(s string, packedLength int) PackedASCII {
-	unpackedLength := packedLength * 8 / 6
-	ascii := strings.ToUpper(s) + strings.Repeat(" ", unpackedLength-len(s))
-	unpacked := []byte(ascii[:unpackedLength])
-
-	var packed PackedASCII = make([]byte, packedLength)
-	pack(unpacked, packed)
-	return PackedASCII(packed)
+func NewPackedAscii(ascii string, packedLength int) PackedASCII {
+	r := strings.NewReader(ascii)
+	var packed = PackedASCII(make([]byte, packedLength))
+	if _, err := io.Copy(packed, r); err != nil {
+		panic(err)
+	}
+	return packed
 }
 
 func (packed PackedASCII) String() string {
-	var unpackedBytes = len(packed) * 8 / 6
-	var ascii = make([]byte, unpackedBytes)
-
-	unpack(packed, ascii)
-	return string(ascii)
+	w := new(bytes.Buffer)
+	if n, _ := io.Copy(w, packed); n > 0 {
+		return w.String()
+	}
+	return ""
 }
 
-func pack(ascii ASCII, packed PackedASCII) {
-	var bits = len(ascii) * 6
-	for i := 0; i < bits; i++ {
-		bit := ascii.getASCIIBit(i)
-		packed.setPackedBit(i, bit)
+// Write writes bytes from source to the underlying data stream.
+// It behaves different than normal Writer: if source ends it is padded with spaces, as is the nature of packetASCII
+// It returns the number of bytes written from source (0 <= n <= len(b)). In case of padding it returns max len(src)
+func (packed PackedASCII) Write(src []byte) (n int, err error) {
+	n = 0  // licznik bajtów odczytanych ze źródła, inkrementowany co 4
+	w := 0 // licznik bajtów wpisanych do dest, inkrementowany co 3
+	a := bytes.ToUpper(src)
+	srcLen := len(src)
+	buf := make([]byte, 4)
+	var bits uint32
+	for {
+		bits = bits + uint32(a[n]&0x3f)
+		if n++; (n % 4) == 0 {
+			//4 bytes from input are packed into 3 bytes of result integer
+			binary.BigEndian.PutUint32(buf, bits)
+			w += copy(packed[w:], buf[1:]) //copy 3 bytes
+			if w >= len(packed) {               //checking for end
+				if n < srcLen {
+					return n, errors.New("Buffer too small to write all data")
+				}
+				return min(n, srcLen), nil
+			}
+		}
+		// if src buf ends padd it right by space
+		if n >= srcLen {
+			a = append(a, ' ')
+		}
+		// shift result
+		bits = bits << 6
 	}
 }
 
-func unpack(packed PackedASCII, ascii ASCII) {
-	var bits = len(ascii) * 6
-	for i := 0; i < bits; i++ {
-		var bit = packed.getPackedBit(i)
-		ascii.setASCIIBit(i, bit)
-	}
-
-	// set 6 bit (complement of bit 5)
-	for i := 0; i < len(ascii); i++ {
-		if (ascii[i] & 0x20) == 0 {
-			ascii[i] |= 0x40
+// Read reads up to len(packed) bytes into dst. It returns the number of bytes read (0 <= n <= len(dst))
+func (packed PackedASCII) Read(dst []byte) (n int, err error) {
+	r := 0 // bytes read from packed, incremented by 3
+	n = 0  // wytes writen to dst, incremented by 4
+	buf := make([]byte, 4)
+	var bits uint32
+	for {
+		if r >= len(packed) {
+			return n, io.EOF
+		}
+		if c := copy(buf[1:], packed[r:]); c == 3 { // copy 3 bytes of packed into buf
+			r += 3
+			bits = binary.BigEndian.Uint32(buf)
+			for _, shift := range shifts {
+				if n == len(dst) {
+					return n, nil //buffer ends
+				}
+				dst[n] = byte((bits >> shift) & 0x3f)
+				// set 6 bit if bit 5 == 0
+				if (dst[n] & 0x20) == 0 {
+					dst[n] |= 0x40
+				}
+				n++
+			}
 		}
 	}
-
 }
 
-var shifts = []int{2, 3, 4, 5, 6, 7, 4, 5, 6, 7, 0, 1, 6, 7, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5}
-var tabIdxs = []int{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2}
+var shifts = []int{18, 12, 6, 0}
 
-func (p PackedASCII) getPackedBit(index int) bool {
-	var i = index % 24
-	var shift = shifts[i]
-	var tabIdx = tabIdxs[i] + ((index / 24) * 3)
-	var b = (byte)((p[tabIdx] >> shift) & 0x01)
-	return b == 0x01
-}
-
-func (p PackedASCII) setPackedBit(index int, bit bool) {
-	var i = index % 24
-	var shift = shifts[i]
-	var tabIdx = tabIdxs[i] + ((index / 24) * 3)
-	var mask = (byte)(1 << shift)
-	if bit {
-		p[tabIdx] |= mask
-	} else {
-		p[tabIdx] &= (byte)(mask ^ 0xff)
+func min(a, b int) int {
+	if a < b {
+		return a
 	}
-}
-
-func (ascii ASCII) getASCIIBit(index int) bool {
-	tabIdx, shift := index/6, index%6
-	b := byte((ascii[tabIdx] >> shift) & 0x01)
-	return b == 0x01
-}
-
-func (ascii ASCII) setASCIIBit(index int, bit bool) {
-	tabIdx, shift := index/6, index%6
-	mask := byte(1 << shift)
-	if bit {
-		ascii[tabIdx] |= mask
-	} else {
-		ascii[tabIdx] &= byte(mask ^ 0xff)
-	}
+	return b
 }
