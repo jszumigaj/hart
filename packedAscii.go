@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+// PackedASCII wraps buffer with packed ASCII characters when each 8-bit char is compacted into 6-bit data
+// In consequence each 4 bytes of string can be put into 3 bytes of data
 type PackedASCII []byte
 
 // NewPackedASCII creates new PackedASCII
@@ -44,7 +46,7 @@ func (packed PackedASCII) Write(src []byte) (n int, err error) {
 			//4 bytes from input are packed into 3 bytes of result integer
 			binary.BigEndian.PutUint32(buf, bits)
 			w += copy(packed[w:], buf[1:]) //copy 3 bytes
-			if w >= len(packed) {               //checking for end
+			if w >= len(packed) {          //checking for end
 				if n < srcLen {
 					return n, errors.New("Buffer too small to write all data")
 				}

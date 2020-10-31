@@ -1,6 +1,7 @@
 package hart
 
 // FrameSender is interface used by CommandExecutor. It wraps method used to send frame.
+// go:generate mockgen -destination=mocks/mock_modem.go -package=mocks . FrameSender
 type FrameSender interface {
 	SendFrame(rx, tx []byte) (int, error)
 }
@@ -69,7 +70,7 @@ func (m *Master) Execute(command Command) (CommandStatus, error) {
 	var rxFrame *Frame
 	var ok bool
 	if rxFrame, ok = Parse(rxBuffer); !ok {
-		return nil, &FrameParsingError{*rxFrame}
+		return nil, &FrameParsingError{rxBuffer}
 	}
 
 	// frame is ok, set device status and command status

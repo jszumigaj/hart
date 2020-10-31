@@ -44,7 +44,10 @@ func (c *command0) Status() hart.CommandStatus { return c.status }
 func (c *command0) SetData(data []byte, status hart.CommandStatus) bool {
 	c.status = status
 
-	if len(data) < 12 && data[0] != 0xfe {
+	if len(data) < 12 {
+		return false
+	}
+	if data[0] != 0xfe {
 		return false
 	}
 

@@ -21,9 +21,9 @@ func (e FrameDataParsingError) Error() string {
 
 // FrameParsingError - hart.Parse frame func returns false
 type FrameParsingError struct {
-	frame Frame
+	buffer []byte
 }
 
 func (e *FrameParsingError) Error() string {
-	return fmt.Sprintf("Invalid hart frame: %v", e.frame)
+	return fmt.Sprintf("Invalid hart frame: %v", e.buffer)
 }
