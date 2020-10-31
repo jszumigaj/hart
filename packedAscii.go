@@ -10,7 +10,8 @@ import (
 
 type PackedASCII []byte
 
-func NewPackedAscii(ascii string, packedLength int) PackedASCII {
+// NewPackedASCII creates new PackedASCII
+func NewPackedASCII(ascii string, packedLength int) PackedASCII {
 	r := strings.NewReader(ascii)
 	var packed = PackedASCII(make([]byte, packedLength))
 	if _, err := io.Copy(packed, r); err != nil {

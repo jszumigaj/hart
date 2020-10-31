@@ -17,6 +17,9 @@ type UniversalDevice struct {
 	command1
 	command2
 	command3
+
+	command12
+	command17
 }
 
 func (d *UniversalDevice) String() string {
@@ -49,17 +52,25 @@ func (d *UniversalDevice) Status() hart.FieldDeviceStatus { return d.status }
 // SetStatus is DeviceIdentifier method implementation
 func (d *UniversalDevice) SetStatus(status hart.FieldDeviceStatus) { d.status = status }
 
-// Command0 creates command for reading HART Command #0
+// Command0 creates command for reading HART Command #0 (Identify slave device)
 func (d *UniversalDevice) Command0() hart.Command { return &command0{device: d} }
 
-// Command1 creates command for reading HART Command #1
+// Command1 creates command for reading HART Command #1 (Read PV)
 func (d *UniversalDevice) Command1() hart.Command { return &command1{device: d} }
 
-// Command2 creates command for reading HART Command #2
+// Command2 creates command for reading HART Command #2 (Read current and percent of range)
 func (d *UniversalDevice) Command2() hart.Command { return &command2{device: d} }
 
-// Command3 creates command for reading HART Command #3
+// Command3 creates command for reading HART Command #3 (Read primary variables)
 func (d *UniversalDevice) Command3() hart.Command { return &command3{device: d} }
+
+// Command12 creates command for reading HART Command #12 (Read Message)
+func (d *UniversalDevice) Command12() hart.Command { return &command12{device: d} }
+
+// Command17 creates command for reading HART Command #12 (Write Message)
+func (d *UniversalDevice) Command17(message string) hart.Command {
+	return &command17{device: d, msg: message}
+}
 
 // UnitCode is an alias to hart.UnitCode
 type UnitCode = hart.UnitCode

@@ -13,9 +13,9 @@ func TestAsciiToPackedAscii(t *testing.T) {
 	expected := []byte{80, 84, 212, 130, 8, 32}
 
 	//act
-	packedA := NewPackedAscii(msg, 6)
-	result := []byte(packedA)
-	
+	packed := NewPackedASCII(msg, 6)
+	result := []byte(packed)
+
 	//assert
 	if !cmp.Equal(result, expected) {
 		t.Errorf("Expected %v but got %v", expected, result)
@@ -30,7 +30,7 @@ func TestPackedAsciiToAscii(t *testing.T) {
 	result := packed.String()
 	result = strings.TrimRight(result, " ")
 
-    if result != expected {
+	if result != expected {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
 }

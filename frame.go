@@ -1,3 +1,4 @@
+// Package hart provides HART protocol core functions
 package hart
 
 // Delimiter constants
@@ -8,7 +9,7 @@ const (
 	SlaveToMasterLongFrame  = 0x86
 )
 
-// Frame frame
+// Frame contains HART frame data and methods to communicate through
 type Frame struct {
 	preambles      int
 	delimiter      byte
@@ -44,8 +45,8 @@ func NewFrame(preambles byte, delimiter byte, address []byte, command byte, resp
 	}
 }
 
-// Parse buffer to HartFrame. Returns HartFrame and ok status (true).
-// If buffer continas invalid data return nil, false
+// Parse buffer to HartFrame. Returns HartFrame and ok status (==true).
+// If buffer continas invalid data returns nil, false
 // If buffer contains valid data but only CRC is invalid - returns frame, false
 func Parse(buffer []byte) (*Frame, bool) {
 	index := 0
