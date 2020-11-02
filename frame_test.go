@@ -1,8 +1,10 @@
 package hart
 
 import (
-	"github.com/google/go-cmp/cmp"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
+	"github.com/jszumigaj/hart/status"
 )
 
 func TestShortHartFrame(t *testing.T) {
@@ -148,7 +150,7 @@ func TestLongReplyHartFrame(t *testing.T) {
 	}
 }
 
-func TestFrameZero(t *testing.T){
+func TestFrameZero(t *testing.T) {
 	frameZero := FrameZero
 
 	if cmp.Equal(frameZero.address, []byte{0}) == false {
@@ -160,15 +162,14 @@ func TestFrameZero(t *testing.T){
 	}
 }
 
-
 func TestDeviceStatus(t *testing.T) {
 
 	addr := []byte{0}
-	status := []byte{0x00, 0x40}
+	resStat := []byte{0x00, 0x40}
 	data := []byte{}
-	frame := NewFrame(5, 0x06, addr, 0x00, status, data)
+	frame := NewFrame(5, 0x06, addr, 0x00, resStat, data)
 
-	if frame.DeviceStatus() != ConfigurationChanged {
+	if frame.DeviceStatus() != status.ConfigurationChanged {
 		t.Error("Expected ConfigurationChanged flag")
 	}
 }
@@ -176,11 +177,11 @@ func TestDeviceStatus(t *testing.T) {
 func TestCommandStatus(t *testing.T) {
 
 	addr := []byte{0}
-	status := []byte{0x40, 0x00}
+	resStat := []byte{0x40, 0x00}
 	data := []byte{}
-	frame := NewFrame(5, 0x06, addr, 0x00, status, data)
+	frame := NewFrame(5, 0x06, addr, 0x00, resStat, data)
 
-	if frame.CommandStatus() != CommandNotImplemented {
+	if frame.CommandStatus() != status.CommandNotImplemented {
 		t.Error("Expected ConfigurationChanged flag")
 	}
 }
@@ -188,11 +189,11 @@ func TestCommandStatus(t *testing.T) {
 func TestCommunicationsErrorStatus(t *testing.T) {
 
 	addr := []byte{0}
-	status := []byte{0x88, 0x00}
+	resStat := []byte{0x88, 0x00}
 	data := []byte{}
-	frame := NewFrame(5, 0x06, addr, 0x00, status, data)
+	frame := NewFrame(5, 0x06, addr, 0x00, resStat, data)
 
-	if frame.CommandStatus() != LongitudalParityError {
+	if frame.CommandStatus() != status.LongitudalParityError {
 		t.Errorf("Expected LongitudalParityError flag but got %v", frame.CommandStatus())
 	}
 }

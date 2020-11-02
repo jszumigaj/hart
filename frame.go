@@ -1,6 +1,8 @@
 // Package hart provides HART protocol core functions
 package hart
 
+import "github.com/jszumigaj/hart/status"
+
 // Delimiter constants
 const (
 	MasterToSlaveShortFrame = 0x02
@@ -169,25 +171,25 @@ func (f *Frame) Length() int {
 func (f *Frame) CommandStatus() CommandStatus {
 
 	if len(f.responseStatus) == 0 {
-		return CommandStatus(None)
+		return CommandStatus(status.None)
 	}
 
-	status := f.responseStatus[0]
+	response := f.responseStatus[0]
 
-	if status&0x80 == 0x80 {
-		return CommunicationsErrorSummaryFlags(status & 0x7f)
+	if response&0x80 == 0x80 {
+		return status.CommunicationsErrorSummaryFlags(response & 0x7f)
 	}
-	return CommandSpecificStatus(status)
+	return status.CommandSpecificStatus(response)
 }
 
 // DeviceStatus returns field device status flags
-func (f *Frame) DeviceStatus() FieldDeviceStatus {
+func (f *Frame) DeviceStatus() status.FieldDeviceStatus {
 
 	if len(f.responseStatus) < 2 {
-		return FieldDeviceStatus(0)
+		return status.FieldDeviceStatus(0)
 	}
 
-	return FieldDeviceStatus(f.responseStatus[1])
+	return status.FieldDeviceStatus(f.responseStatus[1])
 }
 
 // Data returns frame data

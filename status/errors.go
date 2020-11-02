@@ -1,6 +1,6 @@
-// This file contains error types used by Master.Execute func
+// This package contains error types used by Master.Execute func
 
-package hart
+package status
 
 import (
 	"errors"
@@ -12,18 +12,18 @@ var ErrNoResponse error = errors.New("No response")
 
 // FrameDataParsingError - Frame.SetData method returns false
 type FrameDataParsingError struct {
-	frame Frame
+	Frame []byte
 }
 
 func (e FrameDataParsingError) Error() string {
-	return fmt.Sprintf("Invalid frame data: %v", e.frame)
+	return fmt.Sprintf("Invalid frame data: %v", e.Frame)
 }
 
 // FrameParsingError - hart.Parse frame func returns false
 type FrameParsingError struct {
-	buffer []byte
+	Frame []byte
 }
 
 func (e *FrameParsingError) Error() string {
-	return fmt.Sprintf("Invalid hart frame: %v", e.buffer)
+	return fmt.Sprintf("Invalid hart frame: %v", e.Frame)
 }

@@ -6,11 +6,12 @@ import (
 	"math"
 
 	"github.com/jszumigaj/hart"
+	"github.com/jszumigaj/hart/status"
 )
 
 // UniversalDevice implements DeviceIdentifier
 type UniversalDevice struct {
-	status hart.FieldDeviceStatus
+	status status.FieldDeviceStatus
 
 	// embeded command data:
 	command0
@@ -47,10 +48,10 @@ func (d *UniversalDevice) Preambles() byte {
 }
 
 // Status is DeviceIdentifier method implementation
-func (d *UniversalDevice) Status() hart.FieldDeviceStatus { return d.status }
+func (d *UniversalDevice) Status() status.FieldDeviceStatus { return d.status }
 
 // SetStatus is DeviceIdentifier method implementation
-func (d *UniversalDevice) SetStatus(status hart.FieldDeviceStatus) { d.status = status }
+func (d *UniversalDevice) SetStatus(status status.FieldDeviceStatus) { d.status = status }
 
 // Command0 creates command for reading HART Command #0 (Identify slave device)
 func (d *UniversalDevice) Command0() hart.Command { return &command0{device: d} }

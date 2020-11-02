@@ -7,6 +7,7 @@ import (
 	"github.com/jszumigaj/hart"
 	"github.com/jszumigaj/hart/device"
 	"github.com/jszumigaj/hart/mocks"
+	"github.com/jszumigaj/hart/status"
 
 	"github.com/golang/mock/gomock"
 )
@@ -33,14 +34,14 @@ func TestEverythingOkey(t *testing.T) {
 
 	//ACT
 	sut := hart.NewMaster(modem)
-	status, _ := sut.Execute(command)
+	result, _ := sut.Execute(command)
 
 	// ASSERT
-	AssertEqual(t, status, hart.NoCommandSpecificError)
+	AssertEqual(t, result, status.NoCommandSpecificError)
 	AssertEqual(t, dev.ManufacturerId(), byte(0xbc))
 	AssertEqual(t, dev.MfrsDeviceType(), byte(0x7b))
 	AssertEqual(t, dev.Id(), uint32(1192417))
-	AssertEqual(t, dev.Status(), hart.ConfigurationChanged)
+	AssertEqual(t, dev.Status(), status.ConfigurationChanged)
 	AssertEqual(t, dev.Preambles(), byte(5))
 }
 
@@ -63,10 +64,10 @@ func TestCommandStatus(t *testing.T) {
 
 	//Act
 	sut := hart.NewMaster(modem)
-	status, _ := sut.Execute(command)
+	result, _ := sut.Execute(command)
 
-	AssertEqual(t, status, hart.CommandNotImplemented)
-	AssertEqual(t, dev.Status(), hart.ColdStart)
+	AssertEqual(t, result, status.CommandNotImplemented)
+	AssertEqual(t, dev.Status(), status.ColdStart)
 }
 
 func TestCommunicationStatus(t *testing.T) {
@@ -88,10 +89,10 @@ func TestCommunicationStatus(t *testing.T) {
 
 	//Act
 	sut := hart.NewMaster(modem)
-	status, _ := sut.Execute(command)
+	result, _ := sut.Execute(command)
 
-	AssertEqual(t, status, hart.LongitudalParityError)
-	AssertEqual(t, dev.Status(), hart.FieldDeviceStatus(0))
+	AssertEqual(t, result, status.LongitudalParityError)
+	AssertEqual(t, dev.Status(), status.FieldDeviceStatus(0))
 }
 
 func TestNoResponse(t *testing.T) {
@@ -107,10 +108,10 @@ func TestNoResponse(t *testing.T) {
 
 	//Act
 	sut := hart.NewMaster(modem)
-	status, err := sut.Execute(command)
+	result, err := sut.Execute(command)
 
-	AssertEqual(t, err, hart.ErrNoResponse)
-	AssertEqual(t, status, nil)
+	AssertEqual(t, err, status.ErrNoResponse)
+	AssertEqual(t, result, nil)
 }
 
 func TestErrorInSender(t *testing.T) {
@@ -126,10 +127,10 @@ func TestErrorInSender(t *testing.T) {
 
 	//Act
 	sut := hart.NewMaster(modem)
-	status, err := sut.Execute(command)
+	result, err := sut.Execute(command)
 
 	AssertEqual(t, err.Error(), "Some problem")
-	AssertEqual(t, status, nil)
+	AssertEqual(t, result, nil)
 }
 
 func AssertEqual(t *testing.T, result, expected interface{}) {

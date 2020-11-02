@@ -1,5 +1,7 @@
 package hart
 
+import "github.com/jszumigaj/hart/status"
+
 // FrameSender is interface used by CommandExecutor. It wraps method used to send frame.
 // go:generate mockgen -destination=mocks/mock_modem.go -package=mocks . FrameSender
 type FrameSender interface {
@@ -25,8 +27,8 @@ type DeviceIdentifier interface {
 	Id() uint32
 	PollAddress() byte
 	Preambles() byte
-	Status() FieldDeviceStatus
-	SetStatus(FieldDeviceStatus)
+	Status() status.FieldDeviceStatus
+	SetStatus(status.FieldDeviceStatus)
 }
 
 // FrameFactory is the func used as factory to create frames by the executor.
@@ -35,9 +37,9 @@ type FrameFactory func(DeviceIdentifier, Command) Frame
 
 // Master executes command. Set Primary property to true to send frame as Primary master
 type Master struct {
-	modem         FrameSender
-	FrameFactory  FrameFactory
-	Primary bool
+	modem        FrameSender
+	FrameFactory FrameFactory
+	Primary      bool
 }
 
 // NewMaster creates Master object
@@ -63,28 +65,28 @@ func (m *Master) Execute(command Command) (CommandStatus, error) {
 		return nil, err
 	}
 	if count == 0 {
-		return nil, ErrNoResponse
+		return nil, status.ErrNoResponse
 	}
 
 	// try parse frame
 	var rxFrame *Frame
 	var ok bool
 	if rxFrame, ok = Parse(rxBuffer); !ok {
-		return nil, &FrameParsingError{rxBuffer}
+		return nil, &status.FrameParsingError{rxBuffer}
 	}
 
 	// frame is ok, set device status and command status
 	result = rxFrame.CommandStatus()
 	// checking status for communications errors
 	switch result.(type) {
-	case CommunicationsErrorSummaryFlags:
+	case status.CommunicationsErrorSummaryFlags:
 		return result, nil
 	}
 
 	// communication was ok, set device status and parse command data
 	device.SetStatus(rxFrame.DeviceStatus())
 	if ok := command.SetData(rxFrame.Data(), result); !ok {
-		return result, &FrameDataParsingError{*rxFrame}
+		return result, &status.FrameDataParsingError{rxBuffer}
 	}
 
 	// everything looks good, get command specific status and return as func result
