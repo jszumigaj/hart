@@ -1,4 +1,4 @@
-package device
+package univrsl
 
 import (
 	"github.com/jszumigaj/hart"
@@ -6,7 +6,7 @@ import (
 
 // command3 implements Command interface:
 type command12 struct {
-	device *UniversalDevice
+	device *Device
 	status hart.CommandStatus
 
 	// command data fields
@@ -36,12 +36,12 @@ func (c *command12) SetData(data []byte, status hart.CommandStatus) bool {
 		return false
 	}
 
-	var packASCII = hart.PackedASCII(data)
+	var packASCII = PackedASCII(data)
 	c.device.Msg = packASCII.String()
 	return true
 }
 
 // Message returns message
-func (d *UniversalDevice) Message() string {
+func (d *Device) Message() string {
 	return d.Msg
 }

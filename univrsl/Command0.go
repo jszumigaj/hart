@@ -1,4 +1,4 @@
-package device
+package univrsl
 
 import (
 	"encoding/binary"
@@ -8,7 +8,7 @@ import (
 
 // Command0 implements Command interface:
 type command0 struct {
-	device *UniversalDevice
+	device *Device
 	status hart.CommandStatus
 
 	// command data fields

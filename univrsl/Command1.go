@@ -1,4 +1,4 @@
-package device
+package univrsl
 
 import (
 	"github.com/jszumigaj/hart"
@@ -6,7 +6,7 @@ import (
 
 // Command1 implements Command interface:
 type command1 struct {
-	device *UniversalDevice
+	device *Device
 	status hart.CommandStatus
 
 	// command data fields
@@ -43,6 +43,6 @@ func (c *command1) SetData(data []byte, status hart.CommandStatus) bool {
 }
 
 // PV returns Primary variable value readed in Command1
-func (d *UniversalDevice) PV() (float32, UnitCode) {
+func (d *Device) PV() (float32, UnitCode) {
 	return d.Pv, d.PvUnit
 }

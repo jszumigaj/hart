@@ -1,4 +1,4 @@
-package device
+package univrsl
 
 import (
 	"github.com/jszumigaj/hart"
@@ -6,7 +6,7 @@ import (
 
 // command3 implements Command interface:
 type command3 struct {
-	device *UniversalDevice
+	device *Device
 	status hart.CommandStatus
 
 	// command data fields
@@ -68,17 +68,17 @@ func (c *command3) SetData(data []byte, status hart.CommandStatus) bool {
 	return true
 }
 
-// SV returns Secondary variable 
-func (d *UniversalDevice) SV() (float32, UnitCode) {
+// SV returns Secondary variable
+func (d *Device) SV() (float32, UnitCode) {
 	return d.Sv, d.SvUnit
 }
 
-// TV returns Third variable 
-func (d *UniversalDevice) TV() (float32, UnitCode) {
+// TV returns Third variable
+func (d *Device) TV() (float32, UnitCode) {
 	return d.Tv, d.TvUnit
 }
 
-// FV returns Fourth variable 
-func (d *UniversalDevice) FV() (float32, UnitCode) {
+// FV returns Fourth variable
+func (d *Device) FV() (float32, UnitCode) {
 	return d.Fv, d.FvUnit
 }

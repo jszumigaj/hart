@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/jszumigaj/hart"
-	"github.com/jszumigaj/hart/device"
+	"github.com/jszumigaj/hart/univrsl"
 	"github.com/jszumigaj/hart/mocks"
 	"github.com/jszumigaj/hart/status"
 
@@ -29,7 +29,7 @@ func TestEverythingOkey(t *testing.T) {
 			return len(resRx), nil
 		})
 
-	dev := device.UniversalDevice{}
+	dev := univrsl.Device{}
 	command := dev.Command0()
 
 	//ACT
@@ -59,7 +59,7 @@ func TestCommandStatus(t *testing.T) {
 			return len(resRx), nil
 		})
 
-	dev := device.UniversalDevice{}
+	dev := univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
@@ -84,7 +84,7 @@ func TestCommunicationStatus(t *testing.T) {
 			return len(resRx), nil
 		})
 
-	dev := device.UniversalDevice{}
+	dev := univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
@@ -103,7 +103,7 @@ func TestNoResponse(t *testing.T) {
 	modem := mocks.NewMockFrameSender(ctrl)
 	modem.EXPECT().SendFrame(gomock.Any(), gomock.Any()).Return(0, nil)
 
-	dev := device.UniversalDevice{}
+	dev := univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
@@ -122,7 +122,7 @@ func TestErrorInSender(t *testing.T) {
 	modem := mocks.NewMockFrameSender(ctrl)
 	modem.EXPECT().SendFrame(gomock.Any(), gomock.Any()).Return(0, errors.New("Some problem"))
 
-	dev := device.UniversalDevice{}
+	dev := univrsl.Device{}
 	command := dev.Command0()
 
 	//Act

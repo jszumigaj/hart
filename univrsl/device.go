@@ -1,4 +1,4 @@
-package device
+package univrsl
 
 import (
 	"encoding/binary"
@@ -9,8 +9,8 @@ import (
 	"github.com/jszumigaj/hart/status"
 )
 
-// UniversalDevice implements DeviceIdentifier
-type UniversalDevice struct {
+// Device implements DeviceIdentifier
+type Device struct {
 	status status.FieldDeviceStatus
 
 	// embeded command data:
@@ -23,24 +23,24 @@ type UniversalDevice struct {
 	command17
 }
 
-func (d *UniversalDevice) String() string {
+func (d *Device) String() string {
 	return fmt.Sprintf("Id: %05d Mfr: 0x%02x Type: 0x%02x", d.DevId, d.MfrsId, d.DevType)
 }
 
 // Id is DeviceIdentifier method implementation
-func (d *UniversalDevice) Id() uint32 { return d.DevId }
+func (d *Device) Id() uint32 { return d.DevId }
 
 // ManufacturerId is DeviceIdentifier method implementation
-func (d *UniversalDevice) ManufacturerId() byte { return d.MfrsId }
+func (d *Device) ManufacturerId() byte { return d.MfrsId }
 
 // MfrsDeviceType is DeviceIdentifier method implementation
-func (d *UniversalDevice) MfrsDeviceType() byte { return d.DevType }
+func (d *Device) MfrsDeviceType() byte { return d.DevType }
 
 // PollAddress is DeviceIdentifier method implementation
-func (d *UniversalDevice) PollAddress() byte { return d.PollAddr }
+func (d *Device) PollAddress() byte { return d.PollAddr }
 
 // Preambles is DeviceIdentifier method implementation
-func (d *UniversalDevice) Preambles() byte {
+func (d *Device) Preambles() byte {
 	if d.Prmbles < 5 {
 		d.Prmbles = 5
 	}
@@ -48,33 +48,30 @@ func (d *UniversalDevice) Preambles() byte {
 }
 
 // Status is DeviceIdentifier method implementation
-func (d *UniversalDevice) Status() status.FieldDeviceStatus { return d.status }
+func (d *Device) Status() status.FieldDeviceStatus { return d.status }
 
 // SetStatus is DeviceIdentifier method implementation
-func (d *UniversalDevice) SetStatus(status status.FieldDeviceStatus) { d.status = status }
+func (d *Device) SetStatus(status status.FieldDeviceStatus) { d.status = status }
 
 // Command0 creates command for reading HART Command #0 (Identify slave device)
-func (d *UniversalDevice) Command0() hart.Command { return &command0{device: d} }
+func (d *Device) Command0() hart.Command { return &command0{device: d} }
 
 // Command1 creates command for reading HART Command #1 (Read PV)
-func (d *UniversalDevice) Command1() hart.Command { return &command1{device: d} }
+func (d *Device) Command1() hart.Command { return &command1{device: d} }
 
 // Command2 creates command for reading HART Command #2 (Read current and percent of range)
-func (d *UniversalDevice) Command2() hart.Command { return &command2{device: d} }
+func (d *Device) Command2() hart.Command { return &command2{device: d} }
 
 // Command3 creates command for reading HART Command #3 (Read primary variables)
-func (d *UniversalDevice) Command3() hart.Command { return &command3{device: d} }
+func (d *Device) Command3() hart.Command { return &command3{device: d} }
 
 // Command12 creates command for reading HART Command #12 (Read Message)
-func (d *UniversalDevice) Command12() hart.Command { return &command12{device: d} }
+func (d *Device) Command12() hart.Command { return &command12{device: d} }
 
 // Command17 creates command for reading HART Command #12 (Write Message)
-func (d *UniversalDevice) Command17(message string) hart.Command {
+func (d *Device) Command17(message string) hart.Command {
 	return &command17{device: d, msg: message}
 }
-
-// UnitCode is an alias to hart.UnitCode
-type UnitCode = hart.UnitCode
 
 func getFloat(buf []byte) (float32, bool) {
 	if len(buf) < 4 {

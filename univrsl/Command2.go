@@ -1,4 +1,4 @@
-package device
+package univrsl
 
 import (
 	"github.com/jszumigaj/hart"
@@ -6,7 +6,7 @@ import (
 
 // Command2 implements Command interface:
 type command2 struct {
-	device *UniversalDevice
+	device *Device
 	status hart.CommandStatus
 
 	// data fields:
@@ -48,7 +48,7 @@ func (c *command2) SetData(data []byte, status hart.CommandStatus) bool {
 }
 
 // Current returns analog output current readed by Command2
-func (d *UniversalDevice) Current() float32 { return d.Curr }
+func (d *Device) Current() float32 { return d.Curr }
 
 // PercentOfRange returs percent of range output
-func (d *UniversalDevice) PercentOfRange() float32 { return d.PoR }
+func (d *Device) PercentOfRange() float32 { return d.PoR }
