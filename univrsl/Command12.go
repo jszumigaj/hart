@@ -4,7 +4,7 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// command3 implements Command interface:
+// command12 reads message (packedAscii)
 type command12 struct {
 	device *Device
 	status hart.CommandStatus
@@ -20,7 +20,7 @@ func (c *command12) Device() hart.DeviceIdentifier { return c.device }
 func (c *command12) Description() string { return "Read message" }
 
 // No properties
-func (c *command12) No() byte { return 17 }
+func (c *command12) No() byte { return 12 }
 
 // Data to send
 func (c *command12) Data() []byte { return hart.NoData }

@@ -20,6 +20,7 @@ type Device struct {
 	command3
 
 	command12
+	command13
 	command17
 }
 
@@ -67,6 +68,9 @@ func (d *Device) Command3() hart.Command { return &command3{device: d} }
 
 // Command12 creates command for reading HART Command #12 (Read Message)
 func (d *Device) Command12() hart.Command { return &command12{device: d} }
+
+// Command13 creates command for reading HART Command #13 (Read tag, descriptor, date)
+func (d *Device) Command13() hart.Command { return &command13{device: d} }
 
 // Command17 creates command for reading HART Command #12 (Write Message)
 func (d *Device) Command17(message string) hart.Command {
