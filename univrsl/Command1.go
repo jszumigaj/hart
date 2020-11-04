@@ -5,37 +5,37 @@ import (
 )
 
 // Command1 implements Command interface:
-type command1 struct {
+type Command1 struct {
 	device *Device
 	status hart.CommandStatus
 
-	// command data fields
+	// command data fields embedded into device
 	Pv     float32  `json:"pv"`
 	PvUnit UnitCode `json:"pv_unit"`
 }
 
 // Device properties
-func (c *command1) Device() hart.DeviceIdentifier { return c.device }
+func (c *Command1) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
-func (c *command1) Description() string { return "Read primary variable" }
+func (c *Command1) Description() string { return "Read primary variable" }
 
 // No properties
-func (c *command1) No() byte { return 1 }
+func (c *Command1) No() byte { return 1 }
 
 // Data to send
-func (c *command1) Data() []byte { return hart.NoData }
+func (c *Command1) Data() []byte { return hart.NoData }
 
 // Status returns command status
-func (c *command1) Status() hart.CommandStatus { return c.status }
+func (c *Command1) Status() hart.CommandStatus { return c.status }
 
 // SetData parse received data
-func (c *command1) SetData(data []byte, status hart.CommandStatus) bool {
+func (c *Command1) SetData(data []byte, status hart.CommandStatus) bool {
 	c.status = status
 
 	if val, unit, ok := getFloatWithUnit(data); ok {
-		c.device.Pv = val
-		c.device.PvUnit = unit
+		c.Pv = val
+		c.PvUnit = unit
 		return true
 	}
 
@@ -43,6 +43,6 @@ func (c *command1) SetData(data []byte, status hart.CommandStatus) bool {
 }
 
 // PV returns Primary variable value readed in Command1
-func (d *Device) PV() (float32, UnitCode) {
-	return d.Pv, d.PvUnit
+func (c *Command1) PV() (float32, UnitCode) {
+	return c.Pv, c.PvUnit
 }

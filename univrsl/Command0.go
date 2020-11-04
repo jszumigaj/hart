@@ -6,12 +6,7 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// Command0 implements Command interface:
-type command0 struct {
-	device *Device
-	status hart.CommandStatus
-
-	// command data fields
+type cmd0Data struct {
 	DevId                     uint32 `json:"device_id"`
 	MfrsId                    byte   `json:"manufacturer_id"`
 	DevType                   byte   `json:"device_type"`
@@ -25,23 +20,32 @@ type command0 struct {
 	Flags                     byte   `json:"flags"`
 }
 
+// Command0 implements Command interface:
+type Command0 struct {
+	device *Device
+	status hart.CommandStatus
+
+	// command data fields
+	cmd0Data
+}
+
 // Device properties
-func (c *command0) Device() hart.DeviceIdentifier { return c.device }
+func (c *Command0) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
-func (c *command0) Description() string { return "Device identification" }
+func (c *Command0) Description() string { return "Device identification" }
 
 // No properties
-func (c *command0) No() byte { return 0 }
+func (c *Command0) No() byte { return 0 }
 
 // Data to send
-func (c *command0) Data() []byte { return hart.NoData }
+func (c *Command0) Data() []byte { return hart.NoData }
 
 // Status returns command status
-func (c *command0) Status() hart.CommandStatus { return c.status }
+func (c *Command0) Status() hart.CommandStatus { return c.status }
 
 // SetData parse received data
-func (c *command0) SetData(data []byte, status hart.CommandStatus) bool {
+func (c *Command0) SetData(data []byte, status hart.CommandStatus) bool {
 	c.status = status
 
 	if len(data) < 12 {
@@ -51,6 +55,9 @@ func (c *command0) SetData(data []byte, status hart.CommandStatus) bool {
 		return false
 	}
 
+	// commands 0 has special meaning in HART protocol, becaouse it provides device identification
+	// so it have to delegate all properties to the device
+	// and have to embedded commands0 data structure
 	c.device.MfrsId = data[1]
 	c.device.DevType = data[2]
 	c.device.Prmbles = data[3]

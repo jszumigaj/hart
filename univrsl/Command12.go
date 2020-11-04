@@ -4,8 +4,8 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// command12 reads message (packedAscii)
-type command12 struct {
+// Command12 reads message (packedAscii)
+type Command12 struct {
 	device *Device
 	status hart.CommandStatus
 
@@ -14,22 +14,22 @@ type command12 struct {
 }
 
 // Device properties
-func (c *command12) Device() hart.DeviceIdentifier { return c.device }
+func (c *Command12) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
-func (c *command12) Description() string { return "Read message" }
+func (c *Command12) Description() string { return "Read message" }
 
 // No properties
-func (c *command12) No() byte { return 12 }
+func (c *Command12) No() byte { return 12 }
 
 // Data to send
-func (c *command12) Data() []byte { return hart.NoData }
+func (c *Command12) Data() []byte { return hart.NoData }
 
 // Status returns command status
-func (c *command12) Status() hart.CommandStatus { return c.status }
+func (c *Command12) Status() hart.CommandStatus { return c.status }
 
 // SetData parse received data
-func (c *command12) SetData(data []byte, status hart.CommandStatus) bool {
+func (c *Command12) SetData(data []byte, status hart.CommandStatus) bool {
 	c.status = status
 
 	if len(data) < 24 {
@@ -37,11 +37,11 @@ func (c *command12) SetData(data []byte, status hart.CommandStatus) bool {
 	}
 
 	var packASCII = PackedASCII(data)
-	c.device.Msg = packASCII.String()
+	c.Msg = packASCII.String()
 	return true
 }
 
 // Message returns message
-func (d *Device) Message() string {
+func (d *Command12) Message() string {
 	return d.Msg
 }
