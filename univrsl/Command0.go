@@ -6,6 +6,7 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
+// contains data readed by Command #0. This struct is embeded into univrsl.Device type
 type cmd0Data struct {
 	DevId                     uint32 `json:"device_id"`
 	MfrsId                    byte   `json:"manufacturer_id"`
@@ -20,7 +21,7 @@ type cmd0Data struct {
 	Flags                     byte   `json:"flags"`
 }
 
-// Command0 implements Command interface:
+// Command0 reads device identification
 type Command0 struct {
 	Device *Device
 	status hart.CommandStatus

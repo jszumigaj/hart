@@ -4,13 +4,13 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// Command2 implements Command interface:
+// Command2 reads current and percent of range
 type Command2 struct {
 	status hart.CommandStatus
 
 	// data fields:
-	Curr float32 `json:"current"`
-	PoR  float32 `json:"percent_of_range"`
+	Current        float32 `json:"current"`
+	PercentOfRange float32 `json:"percent_of_range"`
 }
 
 // Description properties
@@ -33,18 +33,12 @@ func (c *Command2) SetData(data []byte, status hart.CommandStatus) bool {
 	var ok bool
 
 	if val, ok = getFloat(data); ok {
-		c.Curr = val
+		c.Current = val
 	}
 
 	if val, ok = getFloat(data[4:]); ok {
-		c.PoR = val
+		c.PercentOfRange = val
 	}
 
 	return ok
 }
-
-// Current returns analog output current readed by Command2
-func (d *Command2) Current() float32 { return d.Curr }
-
-// PercentOfRange returs percent of range output
-func (d *Command2) PercentOfRange() float32 { return d.PoR }

@@ -9,7 +9,7 @@ type Command12 struct {
 	status hart.CommandStatus
 
 	// command data fields
-	Msg string `json:"message"`
+	Message string `json:"message"`
 }
 
 // Description properties
@@ -33,11 +33,6 @@ func (c *Command12) SetData(data []byte, status hart.CommandStatus) bool {
 	}
 
 	var packASCII = PackedASCII(data)
-	c.Msg = packASCII.String()
+	c.Message = packASCII.String()
 	return true
-}
-
-// Message returns message
-func (d *Command12) Message() string {
-	return d.Msg
 }

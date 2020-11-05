@@ -4,13 +4,12 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// Command1 implements Command interface:
+// Command1 reads Primary variable and unit
 type Command1 struct {
 	status hart.CommandStatus
 
-	// command data fields embedded into device
-	Pv     float32  `json:"pv"`
-	PvUnit UnitCode `json:"pv_unit"`
+	PV   float32  `json:"pv"`
+	Unit UnitCode `json:"pv_unit"`
 }
 
 // Description properties
@@ -30,16 +29,10 @@ func (c *Command1) SetData(data []byte, status hart.CommandStatus) bool {
 	c.status = status
 
 	if val, unit, ok := getFloatWithUnit(data); ok {
-		c.Pv = val
-		c.PvUnit = unit
+		c.PV = val
+		c.Unit = unit
 		return true
 	}
 
 	return false
 }
-
-// PV returns Primary variable value readed in Command1
-func (c *Command1) PV() (float32, UnitCode) {
-	return c.Pv, c.PvUnit
-}
-

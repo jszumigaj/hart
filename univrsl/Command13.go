@@ -6,14 +6,14 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// command3 Read the Tag, Descriptor and Date contained within the device
+// Command13 reads the Tag, Descriptor and Date contained within the device
 type Command13 struct {
 	status hart.CommandStatus
 
 	// command data fields
-	Tg       string    `json:"tag"`
-	Dscriptr string    `json:"descriptor"`
-	Dtime    time.Time `json:"date_time"`
+	Tag        string    `json:"tag"`
+	Descriptor string    `json:"descriptor"`
+	DateTime   time.Time `json:"date_time"`
 }
 
 // Description properties
@@ -36,26 +36,17 @@ func (c *Command13) SetData(data []byte, status hart.CommandStatus) bool {
 		return false
 	}
 
-	c.Tg = PackedASCII(data[:6]).String()
-	c.Dscriptr = PackedASCII(data[6:12]).String()
+	c.Tag = PackedASCII(data[:6]).String()
+	c.Descriptor = PackedASCII(data[6:12]).String()
 
 	var used bool = data[18] != 250 && data[19] != 250 && data[20] != 250
 	var probablyValid bool = data[18] < 31 && data[19] < 12
 
 	if used && probablyValid {
-		c.Dtime = time.Date(int(data[20])+1900, time.Month(data[19]), int(data[18]), 0, 0, 0, 0, time.UTC)
+		c.DateTime = time.Date(int(data[20])+1900, time.Month(data[19]), int(data[18]), 0, 0, 0, 0, time.UTC)
 	} else {
-		c.Dtime = time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
+		c.DateTime = time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	}
 	return true
 }
-
-// Tag returns Tag
-func (d *Command13) Tag() string { return d.Tg }
-
-// Descriptor returns descriptor
-func (d *Command13) Descriptor() string { return d.Dscriptr }
-
-// Date returns date
-func (d *Command13) Date() time.Time { return d.Dtime }

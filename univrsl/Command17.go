@@ -4,12 +4,12 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// command3 implements Command interface:
+// Command17 writes message
 type Command17 struct {
 	status hart.CommandStatus
 
 	// command data fields
-	Msg string
+	Message    string
 }
 
 // Description properties
@@ -20,7 +20,7 @@ func (c *Command17) No() byte { return 17 }
 
 // Data to send
 func (c *Command17) Data() []byte {
-	packed := NewPackedASCII(c.Msg, 24)
+	packed := NewPackedASCII(c.Message, 24)
 	return packed
 }
 
@@ -36,6 +36,6 @@ func (c *Command17) SetData(data []byte, status hart.CommandStatus) bool {
 	}
 
 	var packASCII = PackedASCII(data)
-	c.Msg = packASCII.String()
+	c.Message = packASCII.String()
 	return true
 }

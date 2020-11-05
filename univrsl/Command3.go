@@ -4,20 +4,20 @@ import (
 	"github.com/jszumigaj/hart"
 )
 
-// Command3 implements Command interface:
+// Command3 reads for variables with units
 type Command3 struct {
 	status hart.CommandStatus
 
 	// command data fields
-	Curr   float32  `json:"Current"`
-	Pv     float32  `json:"pv"`
-	PvUnit UnitCode `json:"pv_unit"`
-	Sv     float32  `json:"sv"`
-	SvUnit UnitCode `json:"sv_unit"`
-	Tv     float32  `json:"tv"`
-	TvUnit UnitCode `json:"tv_unit"`
-	Fv     float32  `json:"fv"`
-	FvUnit UnitCode `json:"fv_unit"`
+	Current float32  `json:"Current"`
+	Pv      float32  `json:"pv"`
+	PvUnit  UnitCode `json:"pv_unit"`
+	Sv      float32  `json:"sv"`
+	SvUnit  UnitCode `json:"sv_unit"`
+	Tv      float32  `json:"tv"`
+	TvUnit  UnitCode `json:"tv_unit"`
+	Fv      float32  `json:"fv"`
+	FvUnit  UnitCode `json:"fv_unit"`
 }
 
 // Description properties
@@ -41,7 +41,7 @@ func (c *Command3) SetData(data []byte, status hart.CommandStatus) bool {
 	}
 
 	if val, ok := getFloat(data); ok {
-		c.Curr = val
+		c.Current = val
 	}
 
 	if val, unit, ok := getFloatWithUnit(data[4:]); ok {
@@ -65,19 +65,4 @@ func (c *Command3) SetData(data []byte, status hart.CommandStatus) bool {
 	}
 
 	return true
-}
-
-// SV returns Secondary variable
-func (d *Command3) SV() (float32, UnitCode) {
-	return d.Sv, d.SvUnit
-}
-
-// TV returns Third variable
-func (d *Command3) TV() (float32, UnitCode) {
-	return d.Tv, d.TvUnit
-}
-
-// FV returns Fourth variable
-func (d *Command3) FV() (float32, UnitCode) {
-	return d.Fv, d.FvUnit
 }
