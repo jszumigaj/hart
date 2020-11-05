@@ -13,7 +13,7 @@ type Command13 struct {
 	// command data fields
 	Tag        string    `json:"tag"`
 	Descriptor string    `json:"descriptor"`
-	DateTime   time.Time `json:"date_time"`
+	Date       time.Time `json:"date"`
 }
 
 // Description properties
@@ -43,9 +43,9 @@ func (c *Command13) SetData(data []byte, status hart.CommandStatus) bool {
 	var probablyValid bool = data[18] < 31 && data[19] < 12
 
 	if used && probablyValid {
-		c.DateTime = time.Date(int(data[20])+1900, time.Month(data[19]), int(data[18]), 0, 0, 0, 0, time.UTC)
+		c.Date = time.Date(int(data[20])+1900, time.Month(data[19]), int(data[18]), 0, 0, 0, 0, time.UTC)
 	} else {
-		c.DateTime = time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
+		c.Date = time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	}
 	return true
