@@ -6,16 +6,12 @@ import (
 
 // Command1 implements Command interface:
 type Command1 struct {
-	device *Device
 	status hart.CommandStatus
 
 	// command data fields embedded into device
 	Pv     float32  `json:"pv"`
 	PvUnit UnitCode `json:"pv_unit"`
 }
-
-// Device properties
-func (c *Command1) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command1) Description() string { return "Read primary variable" }
@@ -46,3 +42,4 @@ func (c *Command1) SetData(data []byte, status hart.CommandStatus) bool {
 func (c *Command1) PV() (float32, UnitCode) {
 	return c.Pv, c.PvUnit
 }
+

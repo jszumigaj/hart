@@ -6,7 +6,6 @@ import (
 
 // Command3 implements Command interface:
 type Command3 struct {
-	device *Device
 	status hart.CommandStatus
 
 	// command data fields
@@ -20,9 +19,6 @@ type Command3 struct {
 	Fv     float32  `json:"fv"`
 	FvUnit UnitCode `json:"fv_unit"`
 }
-
-// Device properties
-func (c *Command3) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command3) Description() string { return "Read PV current and dynamic variables" }

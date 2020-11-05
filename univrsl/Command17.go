@@ -6,15 +6,11 @@ import (
 
 // command3 implements Command interface:
 type Command17 struct {
-	device *Device
 	status hart.CommandStatus
 
 	// command data fields
 	Msg string
 }
-
-// Device properties
-func (c *Command17) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command17) Description() string { return "Write message" }

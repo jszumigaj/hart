@@ -13,7 +13,6 @@ type FrameSender interface {
 type Command interface {
 	No() byte
 	Description() string
-	Device() DeviceIdentifier
 	Status() CommandStatus
 	Data() []byte
 	SetData([]byte, CommandStatus) bool
@@ -51,8 +50,7 @@ func NewMaster(modem FrameSender) *Master {
 }
 
 // Execute method executes HART command
-func (m *Master) Execute(command Command) (CommandStatus, error) {
-	device := command.Device()
+func (m *Master) Execute(command Command, device DeviceIdentifier) (CommandStatus, error) {
 	txFrame := m.FrameFactory(device, command)
 	if m.Primary {
 		txFrame.AsPrimaryMaster()
@@ -95,12 +93,10 @@ func (m *Master) Execute(command Command) (CommandStatus, error) {
 }
 
 // ExecuteAsync executes more commands asynchronously - proof of concept:
-func (m *Master) ExecuteAsync(ch chan<- Command, commands ...Command) error {
-
-	//panic("Not implemented!")
+ func (m *Master) ExecuteAsync(ch chan<- Command, device DeviceIdentifier, commands ...Command) error {
 
 	for _, cmd := range commands {
-		if _, err := m.Execute(cmd); err != nil {
+		if _, err := m.Execute(cmd, device); err != nil {
 			return err
 		}
 		ch <- cmd

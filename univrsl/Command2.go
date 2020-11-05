@@ -6,16 +6,12 @@ import (
 
 // Command2 implements Command interface:
 type Command2 struct {
-	device *Device
 	status hart.CommandStatus
 
 	// data fields:
 	Curr float32 `json:"current"`
 	PoR  float32 `json:"percent_of_range"`
 }
-
-// Device properties
-func (c *Command2) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command2) Description() string { return "Read current and percent of range" }

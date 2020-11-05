@@ -6,15 +6,11 @@ import (
 
 // Command12 reads message (packedAscii)
 type Command12 struct {
-	device *Device
 	status hart.CommandStatus
 
 	// command data fields
 	Msg string `json:"message"`
 }
-
-// Device properties
-func (c *Command12) Device() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command12) Description() string { return "Read message" }

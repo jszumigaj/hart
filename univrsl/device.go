@@ -15,13 +15,6 @@ type Device struct {
 
 	// embeded command data:
 	cmd0Data
-	// command1
-	// command2
-	// command3
-
-	// command12
-	// command13
-	// command17
 }
 
 func (d *Device) String() string {
@@ -55,27 +48,27 @@ func (d *Device) Status() status.FieldDeviceStatus { return d.status }
 func (d *Device) SetStatus(status status.FieldDeviceStatus) { d.status = status }
 
 // Command0 creates command for reading HART Command #0 (Identify slave device)
-func (d *Device) Command0() hart.Command { return &Command0{device: d} }
+func (d *Device) Command0() hart.Command { return &Command0{Device: d} }
 
 // Command1 creates command for reading HART Command #1 (Read PV)
-func (d *Device) Command1() hart.Command { return &Command1{device: d} }
+//func (d *Device) Command1() hart.Command { return &Command1{device: d} }
 
 // Command2 creates command for reading HART Command #2 (Read current and percent of range)
-func (d *Device) Command2() hart.Command { return &Command2{device: d} }
+//func (d *Device) Command2() hart.Command { return &Command2{device: d} }
 
 // Command3 creates command for reading HART Command #3 (Read primary variables)
-func (d *Device) Command3() hart.Command { return &Command3{device: d} }
+//func (d *Device) Command3() hart.Command { return &Command3{device: d} }
 
 // Command12 creates command for reading HART Command #12 (Read Message)
-func (d *Device) Command12() hart.Command { return &Command12{device: d} }
+//func (d *Device) Command12() hart.Command { return &Command12{device: d} }
 
 // Command13 creates command for reading HART Command #13 (Read tag, descriptor, date)
-func (d *Device) Command13() hart.Command { return &Command13{device: d} }
+//func (d *Device) Command13() hart.Command { return &Command13{device: d} }
 
 // Command17 creates command for reading HART Command #12 (Write Message)
-func (d *Device) Command17(message string) hart.Command {
-	return &Command17{device: d, Msg: message}
-}
+// func (d *Device) Command17(message string) hart.Command {
+// 	return &Command17{device: d, Msg: message}
+// }
 
 func getFloat(buf []byte) (float32, bool) {
 	if len(buf) < 4 {

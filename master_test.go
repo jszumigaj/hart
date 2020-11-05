@@ -29,12 +29,12 @@ func TestEverythingOkey(t *testing.T) {
 			return len(resRx), nil
 		})
 
-	dev := univrsl.Device{}
-	command := dev.Command0()
+	dev := &univrsl.Device{}
+	command := &univrsl.Command0{Device: dev}
 
 	//ACT
 	sut := hart.NewMaster(modem)
-	result, _ := sut.Execute(command)
+	result, _ := sut.Execute(command, dev)
 
 	// ASSERT
 	AssertEqual(t, result, status.NoCommandSpecificError)
@@ -59,12 +59,12 @@ func TestCommandStatus(t *testing.T) {
 			return len(resRx), nil
 		})
 
-	dev := univrsl.Device{}
+	dev := &univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, _ := sut.Execute(command)
+	result, _ := sut.Execute(command, dev)
 
 	AssertEqual(t, result, status.CommandNotImplemented)
 	AssertEqual(t, dev.Status(), status.ColdStart)
@@ -84,12 +84,12 @@ func TestCommunicationStatus(t *testing.T) {
 			return len(resRx), nil
 		})
 
-	dev := univrsl.Device{}
+	dev := &univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, _ := sut.Execute(command)
+	result, _ := sut.Execute(command, dev)
 
 	AssertEqual(t, result, status.LongitudalParityError)
 	AssertEqual(t, dev.Status(), status.FieldDeviceStatus(0))
@@ -103,12 +103,12 @@ func TestNoResponse(t *testing.T) {
 	modem := mocks.NewMockFrameSender(ctrl)
 	modem.EXPECT().SendFrame(gomock.Any(), gomock.Any()).Return(0, nil)
 
-	dev := univrsl.Device{}
+	dev := &univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, err := sut.Execute(command)
+	result, err := sut.Execute(command, dev)
 
 	AssertEqual(t, err, status.ErrNoResponse)
 	AssertEqual(t, result, nil)
@@ -122,12 +122,12 @@ func TestErrorInSender(t *testing.T) {
 	modem := mocks.NewMockFrameSender(ctrl)
 	modem.EXPECT().SendFrame(gomock.Any(), gomock.Any()).Return(0, errors.New("Some problem"))
 
-	dev := univrsl.Device{}
+	dev := &univrsl.Device{}
 	command := dev.Command0()
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, err := sut.Execute(command)
+	result, err := sut.Execute(command, dev)
 
 	AssertEqual(t, err.Error(), "Some problem")
 	AssertEqual(t, result, nil)
