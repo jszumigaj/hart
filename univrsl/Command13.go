@@ -37,7 +37,7 @@ func (c *Command13) SetData(data []byte, status hart.CommandStatus) bool {
 	}
 
 	c.Tag = PackedASCII(data[:6]).String()
-	c.Descriptor = PackedASCII(data[6:12]).String()
+	c.Descriptor = PackedASCII(data[6:18]).String()
 
 	var used bool = data[18] != 250 && data[19] != 250 && data[20] != 250
 	var probablyValid bool = data[18] < 31 && data[19] < 12
