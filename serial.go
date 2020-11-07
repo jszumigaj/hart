@@ -43,6 +43,10 @@ func (p *SerialPort) Close() {
 func (p *SerialPort) SendFrame(txBuf []byte, rxBuf []byte) (int, error) {
 	p.Lock()
 	defer p.Unlock()
+
+	// clear buffers
+	p.serial.Flush()
+
 	// wait for end prev transmission (CD low)
 	if cd, err := waitForNoCD(p.serial, 500*time.Millisecond); !cd {
 		if err != nil {
@@ -64,11 +68,12 @@ func (p *SerialPort) SendFrame(txBuf []byte, rxBuf []byte) (int, error) {
 	}
 
 	// read rx data
-	r, err := readSerialData(p.serial, rxBuf)
+	r, err := readSerialData(p.serial, rxBuf, 500*time.Millisecond)
 	return r, err
 }
 
-func readSerialData(s *serial.Port, rxBuf []byte) (int, error) {
+func readSerialData(s *serial.Port, rxBuf []byte, timeout time.Duration) (int, error) {
+	start := time.Now()
 	var readed int = 0
 	for {
 		r, e := s.Read(rxBuf[readed:])
@@ -77,10 +82,14 @@ func readSerialData(s *serial.Port, rxBuf []byte) (int, error) {
 		}
 
 		if r == 0 {
-			break
+			elapsed := time.Now().Sub(start)
+			if readed > 0 || elapsed > timeout {
+				break
+			}
 		}
 
 		readed += r
+		time.Sleep(10 * time.Millisecond)
 	}
 
 	return readed, nil
