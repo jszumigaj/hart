@@ -76,9 +76,8 @@ func (m *Master) Execute(command Command, device DeviceIdentifier) (CommandStatu
 	// frame is ok, set device status and command status
 	result = rxFrame.CommandStatus()
 	// checking status for communications errors
-	switch result.(type) {
-	case status.CommunicationsErrorSummaryFlags:
-		return result, nil
+	if commError, ok := result.(status.CommunicationsErrorSummaryFlags); ok {
+		return commError, commError
 	}
 
 	// communication was ok, set device status and parse command data

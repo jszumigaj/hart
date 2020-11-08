@@ -1,6 +1,9 @@
 package status
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // CommunicationsErrorSummaryFlags Communications Error Summary Flags
 // This status is valid if value & 0x80 == 0x80
@@ -51,6 +54,10 @@ func (flag CommunicationsErrorSummaryFlags) String() string {
 	}
 
 	return strings.Join(names, ", ")
+}
+
+func (flag CommunicationsErrorSummaryFlags) Error() string {
+	return fmt.Sprintf("%v (0x%02x)", flag.String(), byte(flag))
 }
 
 // HasFlag f

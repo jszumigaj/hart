@@ -70,6 +70,7 @@ func TestCommandStatus(t *testing.T) {
 	AssertEqual(t, dev.Status(), status.ColdStart)
 }
 
+// CommunicationStatus tests checks master Execute behavior in case device returns LongitudalParityError communication err.
 func TestCommunicationStatus(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -89,9 +90,11 @@ func TestCommunicationStatus(t *testing.T) {
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, _ := sut.Execute(command, dev)
+	result, err := sut.Execute(command, dev)
 
+	// we expect that Execute returns comm status error in both: status and error result. Device status should be zero.
 	AssertEqual(t, result, status.LongitudalParityError)
+	AssertEqual(t, err, status.LongitudalParityError)
 	AssertEqual(t, dev.Status(), status.FieldDeviceStatus(0))
 }
 
