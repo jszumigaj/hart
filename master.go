@@ -18,6 +18,16 @@ type Command interface {
 	SetData([]byte, CommandStatus) bool
 }
 
+// CommandStatus is the interface wrapped CommunicationsErrorSummaryFlags and CommandSpecificStatus as one common status
+// The returned type depends of MSB bit of the first frame status byte.
+// If MSB=1 this byte means CommunicationsError otherwise it is CommandStatus
+// Some commands can return individual command specific status as CommandStatus type
+type CommandStatus interface {
+	IsError() bool
+	IsWarning() bool
+	String() string
+}
+
 // DeviceIdentifier is the interface that wraps the basic Device methods
 // Commands use this information to create valid HART frame
 type DeviceIdentifier interface {
