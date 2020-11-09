@@ -95,7 +95,7 @@ func TestCommunicationStatus(t *testing.T) {
 	// we expect that Execute returns comm status error in both: status and error result. Device status should be zero.
 	AssertEqual(t, result, status.LongitudalParityError)
 	AssertEqual(t, err, status.LongitudalParityError)
-	AssertEqual(t, dev.Status(), status.FieldDeviceStatus(0))
+	AssertEqual(t, dev.Status(), status.OK)
 }
 
 func TestNoResponse(t *testing.T) {

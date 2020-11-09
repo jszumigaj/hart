@@ -35,6 +35,9 @@ const (
 	// Primary Variable Out of Limits - The process applied to the sensor for the Primary Variable
 	// is beyond the operating limits of the device
 	PrimaryVariableOutOfLimits FieldDeviceStatus = 0x01
+
+	// All right
+	OK FieldDeviceStatus = 0x00
 )
 
 var fieldDeviceStatusDescriptions = map[FieldDeviceStatus]string{
@@ -49,6 +52,10 @@ var fieldDeviceStatusDescriptions = map[FieldDeviceStatus]string{
 }
 
 func (status FieldDeviceStatus) String() string {
+	if status == OK {
+		return "OK"
+	}
+
 	names := []string{}
 	for i := 0; i < 8; i++ {
 		mask := FieldDeviceStatus(1 << i)
