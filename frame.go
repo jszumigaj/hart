@@ -21,7 +21,7 @@ type Frame struct {
 	data           []byte
 }
 
-// FrameZero ShortFrame with Command0 (identification)
+// FrameZero is default ShortFrame with Command0 data (identification)
 var FrameZero = Frame{
 	preambles: 5,
 	delimiter: MasterToSlaveShortFrame,
@@ -197,8 +197,8 @@ func (f *Frame) Data() []byte {
 	return f.data
 }
 
-// PrimaryMaster returns true if frame is addressed to/from Secondary Master
-func (f *Frame) PrimaryMaster() bool {
+// IsPrimaryMaster returns true if frame is addressed to/from Secondary Master
+func (f *Frame) IsPrimaryMaster() bool {
 	return f.address[0]&0x80 == 0x80
 }
 

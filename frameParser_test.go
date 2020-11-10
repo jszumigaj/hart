@@ -61,3 +61,15 @@ func TestParseBadCrcFrame(t *testing.T) {
 		t.Error("frame.Data and data in buffer are dif")
 	}
 }
+
+func TestFrameZero(t *testing.T) {
+	frameZero := FrameZero
+
+	if cmp.Equal(frameZero.address, []byte{0}) == false {
+		t.Error("Invalid address")
+	}
+
+	if frameZero.bytesCount() != 0 {
+		t.Error("Invalid bytes count")
+	}
+}
