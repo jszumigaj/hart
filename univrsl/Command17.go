@@ -8,8 +8,15 @@ import (
 type Command17 struct {
 	status hart.CommandStatus
 
-	// command data fields
-	Message    string
+	// This command inherits fields from command 12
+	Command12
+}
+
+// NewCommand17 creates Command 17
+func NewCommand17(message string) Command17 {
+	return Command17{
+		Command12: Command12{Message: message},
+	}
 }
 
 // Description properties
@@ -27,15 +34,5 @@ func (c *Command17) Data() []byte {
 // Status returns command status
 func (c *Command17) Status() hart.CommandStatus { return c.status }
 
-// SetData parse received data
-func (c *Command17) SetData(data []byte, status hart.CommandStatus) bool {
-	c.status = status
-
-	if len(data) < 24 {
-		return false
-	}
-
-	var packASCII = PackedASCII(data)
-	c.Message = packASCII.String()
-	return true
-}
+// SetData is inherited from Command12
+//func (c *Command17) SetData(data []byte, status hart.CommandStatus) bool {}
