@@ -1,7 +1,7 @@
 package status
 
 // CommandSpecificStatus command status
-// This status is valid if value & 0x80 == 0x00
+// This status is valid if MSB of status byte is 0
 type CommandSpecificStatus byte
 
 // CommandSpecificStatus enum

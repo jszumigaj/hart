@@ -6,27 +6,19 @@ import (
 )
 
 // CommunicationsErrorSummaryFlags Communications Error Summary Flags
-// This status is valid if value & 0x80 == 0x80
+// This status is valid only if MSB of the status byte is 1
 type CommunicationsErrorSummaryFlags byte
 
-// Communications Error Summary Flags descriptions:
-// VerticalParityError: The parity of one or more of hthe bytes received by the device was incorrect.
-// OverrunError: At least one byte of data in the receive buffer of the UART was overwritten before it was read.
-// FramingError: The Stop Bit of one or more bytes received by the device was not detected by the UART.
-// LongitudalParityError: The Longitudal Parity calculated by the device did not match the Longitudal Parity byte at the end of the message
-// Reserved: don't use
-// BufferOverflow: The message was too long for the receive buffer of the device.
-// Undefined: Not defined at this time
-// None:  Ok
+// Communications Error Summary Flags
 const (
-	VerticalParityError   CommunicationsErrorSummaryFlags = 0x40
-	OverrunError          CommunicationsErrorSummaryFlags = 0x20
-	FramingError          CommunicationsErrorSummaryFlags = 0x10
-	LongitudalParityError CommunicationsErrorSummaryFlags = 0x08
-	Reserved              CommunicationsErrorSummaryFlags = 0x04
-	BufferOverflow        CommunicationsErrorSummaryFlags = 0x02
-	Undefined             CommunicationsErrorSummaryFlags = 0x01
-	None                  CommunicationsErrorSummaryFlags = 0
+	VerticalParityError   CommunicationsErrorSummaryFlags = 0x40 // The parity of one or more of hthe bytes received by the device was incorrect.
+	OverrunError          CommunicationsErrorSummaryFlags = 0x20 // At least one byte of data in the receive buffer of the UART was overwritten before it was read.
+	FramingError          CommunicationsErrorSummaryFlags = 0x10 // The Stop Bit of one or more bytes received by the device was not detected by the UART.
+	LongitudalParityError CommunicationsErrorSummaryFlags = 0x08 // The Longitudal Parity calculated by the device did not match the Longitudal Parity byte at the end of the message
+	Reserved              CommunicationsErrorSummaryFlags = 0x04 // don't use
+	BufferOverflow        CommunicationsErrorSummaryFlags = 0x02 // The message was too long for the receive buffer of the device.
+	Undefined             CommunicationsErrorSummaryFlags = 0x01 // Not defined at this time
+	None                  CommunicationsErrorSummaryFlags = 0    // OK
 )
 
 var communicationsErrorFlagsDescriptions = map[CommunicationsErrorSummaryFlags]string{
