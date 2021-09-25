@@ -65,14 +65,14 @@ func (c *Command0) SetData(data []byte, status hart.CommandStatus) bool {
 	c.Device.HardwareRevisionLevel = byte(data[7] >> 3)
 	c.Device.PhisicalSignalingCode = byte(data[7] & 0x07)
 	c.Device.Flags = data[8]
-	c.Device.DevId = getDeviceId(data[9:])
+	c.Device.DevId = getDeviceId(data[9:12])
 	return true
 }
 
 // return deviceId from 3-bytes slice
 func getDeviceId(data []byte) uint32 {
 	if len(data) != 3 {
-		panic("only 3 bytes length device id slice is accepted")
+		panic("DeviceId should be 3-bytes length slice")
 	}
 	data = append([]byte{0}, data...)
 	return binary.BigEndian.Uint32(data)
