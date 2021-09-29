@@ -6,7 +6,7 @@ This is [HART](https://en.wikipedia.org/wiki/Highway_Addressable_Remote_Transduc
 Usage examples
 --------------
 
-##### Sending HART frame
+#### Sending HART frame
 
 
 ``` go
@@ -46,7 +46,7 @@ func main() {
 ```
 
 
-##### Using HART commands
+#### Using HART commands
 
 ``` go
 package main
@@ -95,7 +95,7 @@ func main() {
 }
 ```
 
-##### More complex scenario example
+#### More complex scenario example
 
 ``` go
 package main
