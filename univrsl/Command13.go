@@ -8,6 +8,7 @@ import (
 
 // Command13 reads the Tag, Descriptor and Date contained within the device
 type Command13 struct {
+	device hart.DeviceIdentifier
 	status hart.CommandStatus
 
 	// command data fields
@@ -15,6 +16,10 @@ type Command13 struct {
 	Descriptor string    `json:"descriptor"`
 	Date       time.Time `json:"date"`
 }
+
+func NewCommand13(device hart.DeviceIdentifier) *Command13 { return &Command13{device: device} }
+
+func (c *Command13) DeviceId() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command13) Description() string { return "Read tag, descriptor and date" }

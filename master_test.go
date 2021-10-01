@@ -32,11 +32,11 @@ func TestEverythingOkey(t *testing.T) {
 		})
 
 	dev := &univrsl.Device{}
-	command := &univrsl.Command0{Device: dev}
+	command := univrsl.NewCommand0(dev)
 
 	//ACT
 	sut := hart.NewMaster(modem)
-	result, _ := sut.Execute(command, dev)
+	result, _ := sut.Execute(command)
 
 	// ASSERT
 	AssertEqual(t, result, status.NoCommandSpecificError)
@@ -65,12 +65,12 @@ func TestWorkingAsPrimaryMaster(t *testing.T) {
 		})
 
 	dev := &univrsl.Device{}
-	command := &univrsl.Command0{Device: dev}
+	command := univrsl.NewCommand0(dev)
 
 	//ACT
 	sut := hart.NewMaster(modem)
 	sut.Primary = true
-	result, _ := sut.Execute(command, dev)
+	result, _ := sut.Execute(command)
 
 	// ASSERT
 	AssertEqual(t, result, status.NoCommandSpecificError)
@@ -91,11 +91,11 @@ func TestCommandStatus(t *testing.T) {
 		})
 
 	dev := &univrsl.Device{}
-	command := dev.Command0()
+	command := univrsl.NewCommand0(dev)
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, _ := sut.Execute(command, dev)
+	result, _ := sut.Execute(command)
 
 	AssertEqual(t, result, status.CommandNotImplemented)
 	AssertEqual(t, dev.Status(), status.ColdStart)
@@ -117,11 +117,11 @@ func TestCommunicationStatus(t *testing.T) {
 		})
 
 	dev := &univrsl.Device{}
-	command := dev.Command0()
+	command := univrsl.NewCommand0(dev)
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, err := sut.Execute(command, dev)
+	result, err := sut.Execute(command)
 
 	// we expect that Execute returns comm status error in both: status and error result. Device status should be zero.
 	AssertEqual(t, result, status.LongitudalParityError)
@@ -138,11 +138,11 @@ func TestNoResponse(t *testing.T) {
 	modem.EXPECT().SendFrame(gomock.Any(), gomock.Any()).Return(0, nil)
 
 	dev := &univrsl.Device{}
-	command := dev.Command0()
+	command := univrsl.NewCommand0(dev)
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, err := sut.Execute(command, dev)
+	result, err := sut.Execute(command)
 
 	AssertEqual(t, err, status.ErrNoResponse)
 	AssertEqual(t, result, nil)
@@ -163,11 +163,11 @@ func TestFrameParsingError(t *testing.T) {
 		})
 
 	dev := &univrsl.Device{}
-	command := dev.Command0()
+	command := univrsl.NewCommand0(dev)
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, err := sut.Execute(command, dev)
+	result, err := sut.Execute(command)
 
 	//Assert
 	if parsErr, ok := err.(*status.FrameParsingError); !ok {
@@ -188,11 +188,11 @@ func TestErrorInSender(t *testing.T) {
 	modem.EXPECT().SendFrame(gomock.Any(), gomock.Any()).Return(0, errors.New("Some problem"))
 
 	dev := &univrsl.Device{}
-	command := dev.Command0()
+	command := univrsl.NewCommand0(dev)
 
 	//Act
 	sut := hart.NewMaster(modem)
-	result, err := sut.Execute(command, dev)
+	result, err := sut.Execute(command)
 
 	AssertEqual(t, err.Error(), "Some problem")
 	AssertEqual(t, result, nil)

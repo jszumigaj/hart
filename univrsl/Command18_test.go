@@ -13,8 +13,9 @@ import (
 
 func TestCommand18(t *testing.T) {
 
+	device := &univrsl.Device{}
 	date, _ := time.Parse("2006-01-02", "2020-11-12")
-	sut := univrsl.NewCommand18("tag", "descriptor", date)
+	sut := univrsl.NewCommand18(device, "tag", "descriptor", date)
 
 	if sut.No() != 18 {
 		t.Errorf("Unexpected No == %d", sut.No())

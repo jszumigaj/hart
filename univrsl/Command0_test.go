@@ -10,7 +10,7 @@ import (
 func TestCommand0(t *testing.T) {
 
 	device := univrsl.Device{}
-	sut := device.Command0()
+	sut := univrsl.NewCommand0(&device)
 
 	if sut.No() != 0 {
 		t.Errorf("Unexpected No == %d", sut.No())

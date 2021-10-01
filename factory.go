@@ -5,16 +5,17 @@ import (
 )
 
 // DefaultFrameFactory creates MasterToSlaveShortFrame for Command #0 and MasterToSlaveLongFrame for others
-func DefaultFrameFactory(device DeviceIdentifier, command Command) Frame {
+func DefaultFrameFactory(command Command) Frame {
 	if command.No() == 0 {
-		return ShortFrameFactory(device, command)
+		return ShortFrameFactory(command)
 	}
 
-	return LongFrameFactory(device, command)
+	return LongFrameFactory(command)
 }
 
 // ShortFrameFactory creates Master to slave short frame
-func ShortFrameFactory(device DeviceIdentifier, command Command) Frame {
+func ShortFrameFactory(command Command) Frame {
+	device := command.DeviceId()
 	pre := device.Preambles()
 	addr := []byte{device.PollAddress()}
 	cmd := command.No()
@@ -23,7 +24,8 @@ func ShortFrameFactory(device DeviceIdentifier, command Command) Frame {
 }
 
 // LongFrameFactory creates Master to slave long frame
-func LongFrameFactory(device DeviceIdentifier, command Command) Frame {
+func LongFrameFactory(command Command) Frame {
+	device := command.DeviceId()
 	pre := device.Preambles()
 	addr := getLongAddr(device)
 	cmd := command.No()

@@ -8,19 +8,22 @@ import (
 
 // Command18 writes the Tag, Descriptor and Date contained within the device
 type Command18 struct {
-	status hart.CommandStatus
+	tag        string    `json:"tag"`
+	descriptor string    `json:"descriptor"`
+	date       time.Time `json:"date"`
 
 	// command 18 writes data readed by command 13 and uses the same data fields
 	Command13
 }
 
 // NewCommand18 creates Command18
-func NewCommand18(tag, descriptor string, date time.Time) Command18 {
+func NewCommand18(device hart.DeviceIdentifier, tag, descriptor string, date time.Time) Command18 {
 	return Command18{
-		Command13: Command13{
-			Tag:        tag,
-			Descriptor: descriptor,
-			Date:       date,
+		tag:        tag,
+		descriptor: descriptor,
+		date:       date,
+		Command13: Command13 {
+			device: 	device,
 		}}
 }
 
@@ -35,12 +38,12 @@ func (c *Command18) Status() hart.CommandStatus { return c.status }
 
 // Data to send
 func (c *Command18) Data() []byte {
-	tag := NewPackedASCII(c.Tag, 6)
-	descriptor := NewPackedASCII(c.Descriptor, 12)
+	tag := NewPackedASCII(c.tag, 6)
+	descriptor := NewPackedASCII(c.descriptor, 12)
 	date := []byte{
-		byte(c.Date.Day()),
-		byte(c.Date.Month()),
-		byte(c.Date.Year() - 1900),
+		byte(c.date.Day()),
+		byte(c.date.Month()),
+		byte(c.date.Year() - 1900),
 	}
 
 	var buffer = make([]byte, 21)

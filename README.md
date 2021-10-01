@@ -70,10 +70,10 @@ func main() {
     
     device := &univrsl.Device{}
     
-    cmd0 := &univrsl.Command0{Device: device}
+    cmd0 := univrsl.NewCommand0(device)
     
     log.Println("Executing:", cmd0.Description())
-    status, err := master.Execute(cmd0, device)
+    status, err := master.Execute(cmd0)
     if err != nil {
         log.Fatal(err)
     }
@@ -81,10 +81,10 @@ func main() {
     log.Println("Status:", status)
     log.Println("Result:", cmd0)
     
-    cmd1 := &univrsl.Command1{}
+    cmd1 := univrsl.NewCommand1(device)
     
     log.Println("Executing:", cmd1.Description())
-    status, err = master.Execute(cmd1, device)
+    status, err = master.Execute(cmd1)
     if err != nil {
         log.Fatal(err)
     }
@@ -130,17 +130,17 @@ func main() {
     device := &univrsl.Device{}
 
     commands := []hart.Command{
-        device.Command0(),
-        &univrsl.Command1{},
-        &univrsl.Command2{},
-        &univrsl.Command3{},
-        &univrsl.Command13{},
-        &univrsl.Command15{},
+        univrsl.NewCommand0(device),
+		univrsl.NewCommand1(device),
+		univrsl.NewCommand2(device),
+		univrsl.NewCommand3(device),
+		univrsl.NewCommand13(device),
+		univrsl.NewCommand15(device),
     }
 
     executed := make(chan hart.Command)
 
-    go executeCommands(master, device, commands, executed)
+    go executeCommands(master, commands, executed)
 
     // displayResults
     for command := range executed {
@@ -178,17 +178,15 @@ func main() {
 
 }
 
-func executeCommands(master *hart.Master, device *univrsl.Device, commands []hart.Command, executed chan<- hart.Command) error {
+func executeCommands(master *hart.Master, commands []hart.Command, executed chan<- hart.Command) error {
     for {
         start := time.Now()
         for _, cmd := range commands {
-
-            if _, err := master.Execute(cmd, device); err != nil {
+            if _, err := master.Execute(cmd); err != nil {
                 log.Println(cmd.Description(), "error:", err)
             } else {
                 executed <- cmd
             }
-
         }
         elapsed := time.Now().Sub(start)
         time.Sleep(time.Duration(*delay)*time.Second - elapsed)

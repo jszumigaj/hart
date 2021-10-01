@@ -3,7 +3,6 @@ package univrsl
 import (
 	"fmt"
 
-	"github.com/jszumigaj/hart"
 	"github.com/jszumigaj/hart/status"
 )
 
@@ -44,6 +43,3 @@ func (d *Device) Status() status.FieldDeviceStatus { return d.status }
 
 // SetStatus is DeviceIdentifier method implementation
 func (d *Device) SetStatus(status status.FieldDeviceStatus) { d.status = status }
-
-// Command0 creates command for reading HART Command #0 (Identify slave device)
-func (d *Device) Command0() hart.Command { return &Command0{Device: d} }

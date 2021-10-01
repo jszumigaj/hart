@@ -222,10 +222,11 @@ func TestLongFrameFactory(t *testing.T) {
 
 	//make command stub
 	cmd := mocks.NewMockCommand(ctrl)
+	cmd.EXPECT().DeviceId().Return(device)
 	cmd.EXPECT().No().Return(uint8(0))
 	cmd.EXPECT().Data().Return(make([]byte, 0))
 
-	fr := hart.LongFrameFactory(device, cmd)
+	fr := hart.LongFrameFactory(cmd)
 
 	// expected frame: delim, ManId, DevType, Id, cmd, len
 	expected := []byte{0x82, 0x55, 0xAA, 0x12, 0x34, 0x56, 0x00, 0x00}
@@ -245,11 +246,12 @@ func TestDefaultFrameFactoryForCmd0(t *testing.T) {
 
 	//make command stub
 	cmd := mocks.NewMockCommand(ctrl)
+	cmd.EXPECT().DeviceId().Return(device) // deviceId should return proper device reference
 	cmd.EXPECT().No().Return(uint8(0)) // Command 0 should produce short command
 	cmd.EXPECT().No().MaxTimes(2)      // we expected two calls
 	cmd.EXPECT().Data().Return(make([]byte, 0))
 
-	fr := hart.DefaultFrameFactory(device, cmd)
+	fr := hart.DefaultFrameFactory(cmd)
 
 	// expected frame: delim, pollAddr, cmd, len
 	expected := []byte{0x02, 0x01, 0x00, 0x00}
@@ -271,10 +273,11 @@ func TestDefaultFrameFactoryForCmd1(t *testing.T) {
 
 	//make command stub
 	cmd := mocks.NewMockCommand(ctrl)
+	cmd.EXPECT().DeviceId().Return(device) // deviceId should return proper device reference
 	cmd.EXPECT().No().MaxTimes(2).Return(uint8(1)) // Command 1 should produce long command
 	cmd.EXPECT().Data().Return(make([]byte, 0))
 
-	fr := hart.DefaultFrameFactory(device, cmd)
+	fr := hart.DefaultFrameFactory(cmd)
 
 	// expected frame: delim, ManId, DevType, Id, cmd, len
 	expected := []byte{0x82, 0x55, 0xAA, 0x12, 0x34, 0x56, 0x01, 0x00}

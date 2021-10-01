@@ -6,12 +6,17 @@ import (
 
 // Command2 reads current and percent of range
 type Command2 struct {
+	device hart.DeviceIdentifier
 	status hart.CommandStatus
 
 	// data fields:
 	Current        float32 `json:"current"`
 	PercentOfRange float32 `json:"percent_of_range"`
 }
+
+func NewCommand2(device hart.DeviceIdentifier) *Command2 { return &Command2{device: device} }
+
+func (c *Command2) DeviceId() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command2) Description() string { return "Read current and percent of range" }

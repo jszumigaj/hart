@@ -62,6 +62,20 @@ func (mr *MockCommandMockRecorder) Description() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Description", reflect.TypeOf((*MockCommand)(nil).Description))
 }
 
+// DeviceId mocks base method.
+func (m *MockCommand) DeviceId() hart.DeviceIdentifier {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceId")
+	ret0, _ := ret[0].(hart.DeviceIdentifier)
+	return ret0
+}
+
+// DeviceId indicates an expected call of DeviceId.
+func (mr *MockCommandMockRecorder) DeviceId() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceId", reflect.TypeOf((*MockCommand)(nil).DeviceId))
+}
+
 // No mocks base method.
 func (m *MockCommand) No() byte {
 	m.ctrl.T.Helper()

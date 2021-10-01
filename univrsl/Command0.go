@@ -23,12 +23,16 @@ type cmd0Data struct {
 
 // Command0 reads device identification
 type Command0 struct {
-	Device *Device
+	device *Device
 	status hart.CommandStatus
 
 	// command data fields
 	cmd0Data
 }
+
+func NewCommand0(device *Device) *Command0 { return &Command0{device: device} }
+
+func (c *Command0) DeviceId() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command0) Description() string { return "Device identification" }
@@ -56,16 +60,16 @@ func (c *Command0) SetData(data []byte, status hart.CommandStatus) bool {
 	// commands 0 has special meaning in HART protocol, becaouse it provides device identification
 	// so it have to delegate all properties to the device
 	// and have to embedded commands0 data structure
-	c.Device.MfrsId = data[1]
-	c.Device.DevType = data[2]
-	c.Device.Prmbles = data[3]
-	c.Device.HartProtocolMajorRevision = data[4]
-	c.Device.RevisionLevel = data[5]
-	c.Device.SoftwareRevisionLevel = data[6]
-	c.Device.HardwareRevisionLevel = byte(data[7] >> 3)
-	c.Device.PhisicalSignalingCode = byte(data[7] & 0x07)
-	c.Device.Flags = data[8]
-	c.Device.DevId = getDeviceId(data[9:12])
+	c.device.MfrsId = data[1]
+	c.device.DevType = data[2]
+	c.device.Prmbles = data[3]
+	c.device.HartProtocolMajorRevision = data[4]
+	c.device.RevisionLevel = data[5]
+	c.device.SoftwareRevisionLevel = data[6]
+	c.device.HardwareRevisionLevel = byte(data[7] >> 3)
+	c.device.PhisicalSignalingCode = byte(data[7] & 0x07)
+	c.device.Flags = data[8]
+	c.device.DevId = getDeviceId(data[9:12])
 	return true
 }
 

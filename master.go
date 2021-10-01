@@ -12,6 +12,7 @@ type FrameSender interface {
 // Obiects implemented command interface can be executed by CommandExecutor
 //go:generate mockgen -destination=mocks/mock_command.go -package=mocks . Command
 type Command interface {
+	DeviceId() DeviceIdentifier
 	No() byte
 	Description() string
 	Status() CommandStatus
@@ -45,7 +46,7 @@ type DeviceIdentifier interface {
 
 // FrameFactory is the func used as factory to create frames by the executor.
 // Client can use one of predefined hart.ShortFrameFactory or hart.LongFrameFactory
-type FrameFactory func(DeviceIdentifier, Command) Frame
+type FrameFactory func(Command) Frame
 
 // Master executes command. Set Primary property to true to send frame as Primary master
 type Master struct {
@@ -63,8 +64,8 @@ func NewMaster(modem FrameSender) *Master {
 }
 
 // Execute method executes HART command
-func (m *Master) Execute(command Command, device DeviceIdentifier) (CommandStatus, error) {
-	txFrame := m.FrameFactory(device, command)
+func (m *Master) Execute(command Command) (CommandStatus, error) {
+	txFrame := m.FrameFactory(command)
 	if m.Primary {
 		txFrame.AsPrimaryMaster()
 	}
@@ -95,6 +96,7 @@ func (m *Master) Execute(command Command, device DeviceIdentifier) (CommandStatu
 	}
 
 	// communication was ok, set device status and parse command data
+	device := command.DeviceId()
 	device.SetStatus(rxFrame.DeviceStatus())
 	if ok := command.SetData(rxFrame.Data(), result); !ok {
 		return result, &status.FrameDataParsingError{Frame: rxBuffer}
@@ -106,14 +108,16 @@ func (m *Master) Execute(command Command, device DeviceIdentifier) (CommandStatu
 }
 
 // ExecuteAsync executes more commands asynchronously - proof of concept:
- func (m *Master) ExecuteAsync(ch chan<- Command, device DeviceIdentifier, commands ...Command) error {
+ func (m *Master) ExecuteAsync(ch chan<- Command, commands ...Command) {
 
-	for _, cmd := range commands {
-		if _, err := m.Execute(cmd, device); err != nil {
-			return err
+	go func() error {
+		for _, cmd := range commands {
+			if _, err := m.Execute(cmd); err != nil {
+				return err
+			}
+			ch <- cmd
 		}
-		ch <- cmd
-	}
 
-	return nil
+		return nil
+	}()
 }

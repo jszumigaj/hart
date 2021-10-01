@@ -11,6 +11,7 @@ type AnalogChannelFlags byte
 
 // Command15 reads Device Output Information
 type Command15 struct {
+	device hart.DeviceIdentifier
 	status hart.CommandStatus
 
 	// command data fields
@@ -25,6 +26,10 @@ type Command15 struct {
 	notUsed                      byte                 `json:""`                              // Must be set to 250 by device.
 	AnalogChannel                AnalogChannelFlags   `json:"analogChannel"`                 // PV Analog Channel Flags (pojawia się w HART7)
 }
+
+func NewCommand15(device hart.DeviceIdentifier) *Command15 { return &Command15{device: device} }
+
+func (c *Command15) DeviceId() hart.DeviceIdentifier { return c.device }
 
 // Description properties
 func (c *Command15) Description() string { return "Read Device Output Information" }
