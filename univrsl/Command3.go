@@ -6,8 +6,7 @@ import (
 
 // Command3 reads for variables with units
 type Command3 struct {
-	device hart.DeviceIdentifier
-	status hart.CommandStatus
+	commandBase
 
 	// command data fields
 	Current float32  `json:"Current"`
@@ -21,21 +20,15 @@ type Command3 struct {
 	FvUnit  UnitCode `json:"fv_unit"`
 }
 
-func NewCommand3(device hart.DeviceIdentifier) *Command3 { return &Command3{device: device} }
+func NewCommand3(device hart.DeviceIdentifier) *Command3 { 
+	return &Command3{commandBase: commandBase{device: device}} 
+}
 
-func (c *Command3) DeviceId() hart.DeviceIdentifier { return c.device }
-
-// Description properties
+// Description property
 func (c *Command3) Description() string { return "Read PV current and dynamic variables" }
 
-// No properties
+// No property
 func (c *Command3) No() byte { return 3 }
-
-// Data to send
-func (c *Command3) Data() []byte { return hart.NoData }
-
-// Status returns command status
-func (c *Command3) Status() hart.CommandStatus { return c.status }
 
 // SetData parse received data
 func (c *Command3) SetData(data []byte, status hart.CommandStatus) bool {

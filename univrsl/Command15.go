@@ -11,8 +11,7 @@ type AnalogChannelFlags byte
 
 // Command15 reads Device Output Information
 type Command15 struct {
-	device hart.DeviceIdentifier
-	status hart.CommandStatus
+	commandBase
 
 	// command data fields
 	AlarmSelectionCode           AlarmSelectionCode   `json:"alarmSelectionCodes"`           // PV Alarm Selection Code, 8-bit unsigned integer, Refer to Table VI; Alarm Selection Codes
@@ -27,21 +26,15 @@ type Command15 struct {
 	AnalogChannel                AnalogChannelFlags   `json:"analogChannel"`                 // PV Analog Channel Flags (pojawia się w HART7)
 }
 
-func NewCommand15(device hart.DeviceIdentifier) *Command15 { return &Command15{device: device} }
+func NewCommand15(device hart.DeviceIdentifier) *Command15 { 
+	return &Command15{commandBase: commandBase{device: device}} 
+}
 
-func (c *Command15) DeviceId() hart.DeviceIdentifier { return c.device }
-
-// Description properties
+// Description property
 func (c *Command15) Description() string { return "Read Device Output Information" }
 
-// No properties
+// No property
 func (c *Command15) No() byte { return 15 }
-
-// Data to send
-func (c *Command15) Data() []byte { return hart.NoData }
-
-// Status returns command status
-func (c *Command15) Status() hart.CommandStatus { return c.status }
 
 // SetData parse received data
 func (c *Command15) SetData(data []byte, status hart.CommandStatus) bool {

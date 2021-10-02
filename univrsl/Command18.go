@@ -8,33 +8,28 @@ import (
 
 // Command18 writes the Tag, Descriptor and Date contained within the device
 type Command18 struct {
-	tag        string    `json:"tag"`
-	descriptor string    `json:"descriptor"`
-	date       time.Time `json:"date"`
+	tag        string    
+	descriptor string    
+	date       time.Time 
 
 	// command 18 writes data readed by command 13 and uses the same data fields
 	Command13
 }
 
 // NewCommand18 creates Command18
-func NewCommand18(device hart.DeviceIdentifier, tag, descriptor string, date time.Time) Command18 {
-	return Command18{
+func NewCommand18(device hart.DeviceIdentifier, tag, descriptor string, date time.Time) *Command18 {
+	return &Command18{
 		tag:        tag,
 		descriptor: descriptor,
 		date:       date,
-		Command13: Command13 {
-			device: 	device,
-		}}
-}
+		Command13: 	Command13{commandBase: commandBase{device: device}}}
+	}
 
-// Description properties
+// Description property
 func (c *Command18) Description() string { return "Write tag, descriptor and date" }
 
-// No properties
+// No property
 func (c *Command18) No() byte { return 18 }
-
-// Status returns command status
-func (c *Command18) Status() hart.CommandStatus { return c.status }
 
 // Data to send
 func (c *Command18) Data() []byte {

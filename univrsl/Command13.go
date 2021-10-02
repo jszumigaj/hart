@@ -8,8 +8,7 @@ import (
 
 // Command13 reads the Tag, Descriptor and Date contained within the device
 type Command13 struct {
-	device hart.DeviceIdentifier
-	status hart.CommandStatus
+	commandBase
 
 	// command data fields
 	Tag        string    `json:"tag"`
@@ -17,21 +16,15 @@ type Command13 struct {
 	Date       time.Time `json:"date"`
 }
 
-func NewCommand13(device hart.DeviceIdentifier) *Command13 { return &Command13{device: device} }
+func NewCommand13(device hart.DeviceIdentifier) *Command13 { 
+	return &Command13{commandBase: commandBase{device: device}} 
+}
 
-func (c *Command13) DeviceId() hart.DeviceIdentifier { return c.device }
-
-// Description properties
+// Description property
 func (c *Command13) Description() string { return "Read tag, descriptor and date" }
 
-// No properties
+// No property
 func (c *Command13) No() byte { return 13 }
-
-// Data to send
-func (c *Command13) Data() []byte { return hart.NoData }
-
-// Status returns command status
-func (c *Command13) Status() hart.CommandStatus { return c.status }
 
 // SetData parse received data
 func (c *Command13) SetData(data []byte, status hart.CommandStatus) bool {
